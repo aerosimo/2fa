@@ -1,0 +1,96 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This piece of work is to enhance 2FA project functionality.               ~
+  ~                                                                           ~
+  ~ Author:    Aerosimo                                                       ~
+  ~ File:      405.html                                                       ~
+  ~ Created:   04/10/2021, 13:48                                              ~
+  ~ Modified:  04/10/2021, 13:51                                              ~
+  ~                                                                           ~
+  ~ Copyright (c)  2021.  Aerosimo Ltd                                        ~
+  ~                                                                           ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a   ~
+  ~ copy of this software and associated documentation files (the "Software"),~
+  ~ to deal in the Software without restriction, including without limitation ~
+  ~ the rights to use, copy, modify, merge, publish, distribute, sublicense,  ~
+  ~ and/or sell copies of the Software, and to permit persons to whom the     ~
+  ~ Software is furnished to do so, subject to the following conditions:      ~
+  ~                                                                           ~
+  ~ The above copyright notice and this permission notice shall be included   ~
+  ~ in all copies or substantial portions of the Software.                    ~
+  ~                                                                           ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,           ~
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES           ~
+  ~ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                  ~
+  ~ NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT                ~
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,              ~
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING              ~
+  ~ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE                ~
+  ~ OR OTHER DEALINGS IN THE SOFTWARE.                                        ~
+  ~                                                                           ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <!-- Title -->
+    <title>405 NOT ALLOWED | 2FA Web Application | Aerosimo Ltd</title>
+    <!-- Mobile Specific Meta -->
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <!-- Author Meta -->
+    <meta content="Elijah Omisore" name="author">
+    <!-- Meta Description -->
+    <meta content="Aerosimo IT Consultancy" name="description">
+    <!-- Meta Keyword -->
+    <meta content="2FA, Oracle, Authentication, JDBC, Java, PL/SQL, Tomcat, Maven, Jenkins, Bitbucket, Github, BPMN, UML"
+          name="keywords">
+    <!-- Meta Description -->
+    <meta content="Aerosimo 0.0.1" name="generator">
+    <!-- Meta Browser compatibility -->
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="Aerosimo" name="apple-mobile-web-app-title">
+    <meta content="Aerosimo" name="application-name">
+    <!-- Favicon-->
+    <link href="img/favicon.ico" rel="shortcut icon"/>
+    <link href="img/favicon.ico" rel="icon" type="image/x-icon">
+    <link href="img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+    <link href="img/android-chrome-192x192.png" rel="android-chrome" sizes="192x192">
+    <style>
+        #screen {
+            color: #FFF;
+            background-color: #000000;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            left: 0px;
+            font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+        }
+    </style>
+</head>
+<body>
+<div><p>> <span>ERROR CODE</span>: "<i>HTTP 405 Method Not Allowed</i>"</p>
+    <p>> <span><a href="javascript:history.back()">Go Back</a></span></p>
+</div>
+<div id="screen">Web Classes Interface<br>Version 0.0.1, Alpha<br>
+    <p class="text-white">Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+        <br> All rights reserved.
+    </p>
+    <br>&nbsp<br>----405 ERROR, NOT ALLOWED----<br><br>
+    <div id="denied">access: PERMISSION DENIED - NOT ALLOWED....<br><br>
+        <div id="word"></div>
+    </div>
+</div>
+
+<script>
+    var lol = 0
+    var refreshIntervalId = setInterval(function () {
+        old_html = document.getElementById("word").innerHTML;
+        document.getElementById("word").innerHTML = old_html + "The server can not find the requested resource!<br>";
+    }, 405);
+</script>
+</body>
+</html>
