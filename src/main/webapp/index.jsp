@@ -36,7 +36,7 @@
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Title -->
-    <title>500 SERVER ERROR | 2FA Web Application | Aerosimo Ltd</title>
+    <title>Landing Page | 2FA Web Application | Aerosimo Ltd</title>
     <!-- Mobile Specific Meta -->
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
     <!-- Author Meta -->
