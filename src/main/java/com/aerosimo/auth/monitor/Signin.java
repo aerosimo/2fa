@@ -43,6 +43,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "LoginServlet", description = "A simple login servlet to validate user credentials", urlPatterns = "/signin")
@@ -77,6 +78,7 @@ public class Signin extends HttpServlet {
         uname = req.getParameter("uname");
         pword = req.getParameter("pword");
         loginList = AuthAPI.signin(uname, pword, inet);
+        PrintWriter out = resp.getWriter();
         for (SigninMsg e : loginList) {
             email = e.getEmailAddress();
             authCode = e.getAuthCode();
@@ -85,18 +87,21 @@ public class Signin extends HttpServlet {
             loginDetails = e.getResponseDetail();
         }
         if (loginDetails.equals("Success") && loginCode.equals(0)) {
-            sess.setAttribute("uname", uname);
-            sess.setAttribute("inet", inet);
-            resp.sendRedirect("index.jsp");
+            out.println("<HTML><HEAD><TITLE>Success!</TITLE></HEAD>" +
+                    "<BODY><H2>Hello, I worked Successfully</H2>" +
+                    "<P><H6>My Username is " + uname + "</H6>" +
+                    "<H6>My email is " + email + "</H6>" +
+                    "<H6>My OTP Code is " + authCode + "and it expires at " + expiry + "</H6></P></BODY></HTML>");
+            out.close();
+            //resp.sendRedirect("index.jsp");
         }  else {
-            resp.sendRedirect("500.html");
+            //resp.sendRedirect("500.html");
+            out.println("<HTML><HEAD><TITLE>Success!</TITLE></HEAD>" +
+                    "<BODY><H2>Hello I failed</H2>" +
+                    "<P><H6>My Username is " + uname + "</H6>" +
+                    "<H6>My email is " + email + "</H6>" +
+                    "<H6>My OTP Code is " + authCode + "and it expires at " + expiry + "</H6></P></BODY></HTML>");
+            out.close();
         }
-        log.info("Signin Servlet is successfully called");
-        log.info("email: " + email);
-        log.info("Username: " + uname);
-        log.info("IpAddress: " + inet);
-        log.info("Token: " + authCode);
-        log.info("Expires: " + expiry);
-        log.info("Password: " + pword);
     }
 }
