@@ -33,7 +33,6 @@ package com.aerosimo.auth.monitor;
 
 import com.aerosimo.auth.controller.AuthAPI;
 import com.aerosimo.auth.model.SigninMsg;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,7 +42,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "LoginServlet", description = "A simple login servlet to validate user credentials", urlPatterns = "/signin")
@@ -59,48 +57,22 @@ public class Signin extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
         List<SigninMsg> loginList;
-        HttpSession sess;
         String inet;
         String pword;
         String uname;
-        String email;
-        email = null;
-        String authCode;
-        authCode = null;
-        String expiry;
-        expiry = null;
         inet = req.getRemoteAddr();
-        sess = req.getSession();
-        String loginCode;
-        loginCode = null;
         String loginDetails;
         loginDetails = null;
         uname = req.getParameter("uname");
         pword = req.getParameter("pword");
         loginList = AuthAPI.signin(uname, pword, inet);
-        PrintWriter out = resp.getWriter();
         for (SigninMsg e : loginList) {
-            email = e.getEmailAddress();
-            authCode = e.getAuthCode();
-            expiry = e.getExpiry();
-            loginCode = e.getResponseCode();
             loginDetails = e.getResponseDetail();
         }
         if (loginDetails.equals("Success")){
-            out.println("<HTML><HEAD><TITLE>Success!</TITLE></HEAD>" +
-                    "<BODY><H2 style=\"background-color:MediumSeaGreen;\">Hello, I worked Successfully</H2>" +
-                    "<P style=\"background-color:Violet;\"><H6>My Username is " + uname + "</H6>" +
-                    "<H6>My email is " + email + "</H6>" +
-                    "<H6>My Message Code is " + loginCode + "</H6>" +
-                    "<H6>My message details is " + loginDetails + "</H6>" +
-                    "<H6>My OTP Code is " + authCode + "and it expires at " + expiry + "</H6></P></BODY></HTML>");
-            out.close();
+            resp.sendRedirect("otp.html");
         }else {
-            out.println("<HTML><HEAD><TITLE>Failed!</TITLE></HEAD>" +
-                    "<BODY><H2 style=\"background-color:DodgerBlue;\">Hello, I Fail Miserably</H2>" +
-                    "<P style=\"background-color:Tomato;\"><H6>My Message Code is " + loginCode + "</H6>" +
-                    "<H6>My message details is " + loginDetails + "</H6></P></BODY></HTML>");
-            out.close();
+            resp.sendRedirect("signin.html");
         }
 
     }

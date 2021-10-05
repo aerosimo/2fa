@@ -344,10 +344,14 @@ AS
             o_faultcode := 0;
             o_faultmsg := 'Success';
         ELSE
-            O_faultcode := -20001;
-            O_faultmsg := 'Wrong Username Or Password!';
+            IF SQL%NOTFOUND THEN
+                RAISE NO_DATA_FOUND;
+            END IF;
         END IF;
     EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            o_faultCode := -20001;
+            o_faultMsg := 'Wrong Username Or Password!';
         WHEN OTHERS THEN
             ROLLBACK;
             O_faultcode := SQLCODE;
