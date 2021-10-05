@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      Signin.java                                                     *
- * Created:   05/10/2021, 01:15                                               *
- * Modified:  05/10/2021, 01:15                                               *
+ * File:      otp.java                                                        *
+ * Created:   05/10/2021, 18:19                                               *
+ * Modified:  05/10/2021, 18:19                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -31,40 +31,21 @@
 
 package com.aerosimo.auth.monitor;
 
-import com.aerosimo.auth.controller.AuthAPI;
-import com.aerosimo.auth.model.SigninMsg;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet(name = "LoginServlet", description = "A simple login servlet to validate user credentials", urlPatterns = "/signin")
-public class Signin extends HttpServlet {
+@WebServlet(name = "OTPServlet", description = "A simple otp servlet to validate the user credentials", urlPatterns = "/otp")
+public class otp extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        List<SigninMsg> loginList;
-        String inet;
-        String pword;
-        String uname;
-        inet = req.getRemoteAddr();
-        String loginDetails;
-        loginDetails = null;
-        uname = req.getParameter("uname");
-        pword = req.getParameter("pword");
-        loginList = AuthAPI.signin(uname, pword, inet);
-        for (SigninMsg e : loginList) {
-            loginDetails = e.getResponseDetail();
-        }
-        if (loginDetails.equals("Success")){
-            resp.sendRedirect("otp.html");
-        }else {
-            resp.sendRedirect("signin.html");
-        }
-
+        String authCode;
+        authCode = req.getParameter("otp");
+        resp.sendRedirect("index.jsp");
     }
 }

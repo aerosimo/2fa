@@ -31,6 +31,7 @@
 
 package com.aerosimo.auth.controller;
 
+import com.aerosimo.auth.mail.LoginMail;
 import com.aerosimo.auth.model.SigninMsg;
 import com.aerosimo.util.DBCon;
 import com.aerosimo.util.GenerateOTP;
@@ -74,6 +75,7 @@ public class AuthAPI {
             stmt.registerOutParameter(9, Types.VARCHAR);
             stmt.execute();
             loginList.add(new SigninMsg(stmt.getString(5), stmt.getString(6), stmt.getString(7), stmt.getString(8), stmt.getString(9)));
+            LoginMail.sendOTPMail(username,stmt.getString(5),stmt.getString(6));
         } catch (SQLException err) {
             log.error("Login attempt failed with the following details at AuthAPI.signin: DETAILS: " + err);
         } finally {
