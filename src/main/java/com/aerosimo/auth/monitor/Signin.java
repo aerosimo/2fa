@@ -86,13 +86,22 @@ public class Signin extends HttpServlet {
             loginCode = e.getResponseCode();
             loginDetails = e.getResponseDetail();
         }
-        out.println("<HTML><HEAD><TITLE>Success!</TITLE></HEAD>" +
-                "<BODY><H2>Hello, I worked Successfully</H2>" +
-                "<P><H6>My Username is " + uname + "</H6>" +
-                "<H6>My email is " + email + "</H6>" +
-                "<H6>My Message Code is " + loginCode + "</H6>" +
-                "<H6>My message details is " + loginDetails + "</H6>" +
-                "<H6>My OTP Code is " + authCode + "and it expires at " + expiry + "</H6></P></BODY></HTML>");
-        out.close();
+        if (loginDetails.equals("Success")){
+            out.println("<HTML><HEAD><TITLE>Success!</TITLE></HEAD>" +
+                    "<BODY><H2 style=\"background-color:MediumSeaGreen;\">Hello, I worked Successfully</H2>" +
+                    "<P style=\"background-color:Violet;\"><H6>My Username is " + uname + "</H6>" +
+                    "<H6>My email is " + email + "</H6>" +
+                    "<H6>My Message Code is " + loginCode + "</H6>" +
+                    "<H6>My message details is " + loginDetails + "</H6>" +
+                    "<H6>My OTP Code is " + authCode + "and it expires at " + expiry + "</H6></P></BODY></HTML>");
+            out.close();
+        }else {
+            out.println("<HTML><HEAD><TITLE>Failed!</TITLE></HEAD>" +
+                    "<BODY><H2 style=\"background-color:DodgerBlue;\">Hello, I Fail Miserably</H2>" +
+                    "<P style=\"background-color:Tomato;\"><H6>My Message Code is " + loginCode + "</H6>" +
+                    "<H6>My message details is " + loginDetails + "</H6></P></BODY></HTML>");
+            out.close();
+        }
+
     }
 }
