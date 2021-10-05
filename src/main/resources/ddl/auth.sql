@@ -35,7 +35,6 @@ CREATE TABLE auth_tbl
     uname         VARCHAR2(400 byte),
     pword         VARCHAR2(4000 byte),
     email         VARCHAR2(400 byte),
-    otp           VARCHAR2(10 BYTE),
     status        VARCHAR2(20 byte),
     created_date  TIMESTAMP,
     modified_date TIMESTAMP
@@ -61,7 +60,6 @@ CREATE TABLE otp_tbl
 COMMENT ON COLUMN auth_tbl.uname IS 'This is contact username and a primary identifier.';
 COMMENT ON COLUMN auth_tbl.pword IS 'This is contact set encrypted password';
 COMMENT ON COLUMN auth_tbl.email IS 'Electronic mail is a method of exchanging messages between people using electronic devices.';
-COMMENT ON COLUMN auth_tbl.otp IS 'A one-time password, also known as a one-time PIN, one-time authorization code or dynamic password, is a password that is valid for only one login session or transaction, on a computer system or other digital device';
 COMMENT ON COLUMN auth_tbl.status IS 'This the state of the user account either active or inactive.';
 COMMENT ON COLUMN auth_tbl.created_date IS 'Audit column - date it was first created.';
 COMMENT ON COLUMN auth_tbl.modified_date IS 'Audit column - date of last update.';
@@ -95,9 +93,7 @@ ALTER TABLE otp_tbl
 
 -- Setting Check Constraint
 ALTER TABLE auth_tbl
-    ADD CONSTRAINT authstatus_chk CHECK (status IN ('Active', 'Inactive', 'Pending', 'Closed')) ENABLE;
-ALTER TABLE auth_tbl
-    ADD CONSTRAINT otprequired_chk CHECK (otp IN ('Yes', 'No')) ENABLE;
+    ADD CONSTRAINT authstatus_chk CHECK (status IN ('Active', 'Inactive', 'Closed')) ENABLE;
 ALTER TABLE otp_tbl
     ADD CONSTRAINT otpstatus_chk CHECK (status IN ('Pending', 'Closed')) ENABLE;
 
@@ -107,8 +103,7 @@ CREATE OR REPLACE TRIGGER insertauth_trg
     ON auth_tbl
     FOR EACH ROW
 BEGIN
-    SELECT 'Pending' INTO :NEW.status FROM dual;
-    SELECT 'Yes' INTO :NEW.otp FROM dual;
+    SELECT 'Inactive' INTO :NEW.status FROM dual;
     SELECT SYSTIMESTAMP INTO :NEW.created_Date FROM DUAL;
 END;
 /
@@ -165,7 +160,7 @@ END;
 /
 
 -- Enable Triggers
-    ALTER TRIGGER insertauth_trg ENABLE;
+ALTER TRIGGER insertauth_trg ENABLE;
 ALTER TRIGGER updateauth_trg ENABLE;
 ALTER TRIGGER insertotp_trg ENABLE;
 ALTER TRIGGER insertaudit_trg ENABLE;
@@ -219,7 +214,19 @@ AS
     PROCEDURE setAudit(
         i_uname IN audit_tbl.uname%TYPE,
         i_inet IN audit_tbl.inet%TYPE,
-        i_action IN VARCHAR2(50 BYTE));
+        i_action IN VARCHAR2);
+
+    -- authenticate user
+    PROCEDURE signin(
+        i_uname IN auth_tbl.uname%TYPE,
+        i_pword IN auth_tbl.pword%TYPE,
+        i_inet IN audit_tbl.inet%TYPE,
+        i_authCode IN otp_tbl.authCode%TYPE,
+        o_email OUT auth_tbl.email%TYPE,
+        o_authCode OUT otp_tbl.authCode%TYPE,
+        o_expire OUT otp_tbl.lapse%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2);
 
 END auth_pkg;
 /
@@ -281,7 +288,7 @@ AS
     PROCEDURE setAudit(
         i_uname IN audit_tbl.uname%TYPE,
         i_inet IN audit_tbl.inet%TYPE,
-        i_action IN VARCHAR2(50 BYTE))
+        i_action IN VARCHAR2)
     AS
     BEGIN
         IF (i_action = 'login') THEN
@@ -306,6 +313,46 @@ AS
             ROLLBACK;
     END setAudit;
 
+    -- authenticate user
+    PROCEDURE signin(
+        i_uname IN auth_tbl.uname%TYPE,
+        i_pword IN auth_tbl.pword%TYPE,
+        i_inet IN audit_tbl.inet%TYPE,
+        i_authCode IN otp_tbl.authCode%TYPE,
+        o_email OUT auth_tbl.email%TYPE,
+        o_authCode OUT otp_tbl.authCode%TYPE,
+        o_expire OUT otp_tbl.lapse%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2)
+    AS
+        match_count NUMBER;
+    BEGIN
+        SELECT (SELECT COUNT(uname)
+                FROM auth_tbl
+                WHERE uname = i_uname
+                  AND enc_dec.decrypt(pword) = i_pword
+                  AND status = 'Active'),
+               email
+        INTO match_count, o_email
+        FROM auth_tbl
+        WHERE uname = i_uname
+          AND enc_dec.decrypt(pword) = i_pword
+          AND status = 'Active';
+        IF (match_count = 1) THEN
+            setAudit(i_uname,i_inet,'login');
+            setOTP(i_uname,i_authCode,o_authCode,o_expire);
+            o_faultcode := 0;
+            o_faultmsg := 'Success';
+        ELSE
+            O_faultcode := -20001;
+            O_faultmsg := 'Wrong Username Or Password!';
+        END IF;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            O_faultcode := SQLCODE;
+            O_faultmsg := SUBSTR(SQLERRM, 1, 2000);
+    END signin;
 END auth_pkg;
 /
 
