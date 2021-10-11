@@ -43,7 +43,7 @@ import java.util.Objects;
 
 public class AuthAPI {
 
-    public static String signup(String username, String emailAddress) {
+    public static String signup(String username, String emailAddress, String mfa) {
         CallableStatement stmt;
         stmt = null;
         Connection con;
@@ -52,21 +52,27 @@ public class AuthAPI {
         response = "";
         String sql;
         String password;
-        sql = "{call auth_pkg.signup(?,?,?,?,?)}";
+        sql = "{call auth_pkg.signup(?,?,?,?,?,?)}";
         password = GeneratePassword.getPassword();
+        if (mfa.isEmpty()){
+            mfa = "N";
+        } else {
+            mfa = "Y";
+        }
         try {
             stmt = con.prepareCall(sql);
             stmt.setString(1, username);
             stmt.setString(2, password);
             stmt.setString(3, emailAddress);
-            stmt.registerOutParameter(4, Types.VARCHAR);
+            stmt.setString(4, mfa);
             stmt.registerOutParameter(5, Types.VARCHAR);
+            stmt.registerOutParameter(6, Types.VARCHAR);
             stmt.execute();
-            if (Objects.equals(stmt.getString(5), "Success")) {
-                response = stmt.getString(5);
+            if (Objects.equals(stmt.getString(6), "Success")) {
+                response = stmt.getString(6);
                 Log.info("Account Registration is successful for " + username + " thi the password " + password + " All this information will be emailed to this address " + emailAddress);
             } else {
-                Log.error("Signup fails because CODE: " + stmt.getString(4) + " DETAILS: " + stmt.getString(5));
+                Log.error("Signup fails because CODE: " + stmt.getString(4) + " DETAILS: " + stmt.getString(6));
             }
         } catch (SQLException err) {
             Log.warn("Registration attempt failed with the following details at AuthAPI.signup: DETAILS: " + err);

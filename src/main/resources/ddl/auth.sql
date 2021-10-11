@@ -217,6 +217,7 @@ AS
         i_uname IN auth_tbl.uname%TYPE,
         i_pword IN auth_tbl.pword%TYPE,
         i_email IN auth_tbl.email%TYPE,
+        i_mfa IN auth_tbl.mfa_enabled%TYPE,
         o_faultcode OUT NUMBER,
         o_faultmsg OUT VARCHAR2);
 
@@ -320,12 +321,13 @@ AS
         i_uname IN auth_tbl.uname%TYPE,
         i_pword IN auth_tbl.pword%TYPE,
         i_email IN auth_tbl.email%TYPE,
+        i_mfa IN auth_tbl.mfa_enabled%TYPE,
         o_faultcode OUT NUMBER,
         o_faultmsg OUT VARCHAR2)
     AS
     BEGIN
-        INSERT INTO auth_tbl (uname, email, pword)
-        VALUES (i_uname, i_email, enc_dec.encrypt(i_pword));
+        INSERT INTO auth_tbl (uname, email, pword,mfa_enabled)
+        VALUES (i_uname, i_email, enc_dec.encrypt(i_pword), i_mfa);
         o_faultCode := 0;
         o_faultMsg := 'Success';
     EXCEPTION
