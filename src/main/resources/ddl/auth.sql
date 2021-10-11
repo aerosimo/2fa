@@ -160,7 +160,7 @@ END;
 /
 
 -- Enable Triggers
-ALTER TRIGGER insertauth_trg ENABLE;
+    ALTER TRIGGER insertauth_trg ENABLE;
 ALTER TRIGGER updateauth_trg ENABLE;
 ALTER TRIGGER insertotp_trg ENABLE;
 ALTER TRIGGER insertaudit_trg ENABLE;
@@ -227,6 +227,12 @@ AS
         o_expire OUT otp_tbl.lapse%TYPE,
         o_faultcode OUT NUMBER,
         o_faultmsg OUT VARCHAR2);
+
+    -- check the access code is valid
+    PROCEDURE checkOTP(
+        i_authCode IN otp_tbl.authCode%TYPE,
+        i_uname OUT otp_tbl.uname%TYPE,
+        o_response OUT VARCHAR2);
 
 END auth_pkg;
 /
@@ -339,8 +345,8 @@ AS
           AND enc_dec.decrypt(pword) = i_pword
           AND status = 'Active';
         IF (match_count = 1) THEN
-            setAudit(i_uname,i_inet,'login');
-            setOTP(i_uname,i_authCode,o_authCode,o_expire);
+            setAudit(i_uname, i_inet, 'login');
+            setOTP(i_uname, i_authCode, o_authCode, o_expire);
             o_faultcode := 0;
             o_faultmsg := 'Success';
         ELSE
@@ -357,6 +363,21 @@ AS
             O_faultcode := SQLCODE;
             O_faultmsg := SUBSTR(SQLERRM, 1, 2000);
     END signin;
+
+    -- check the access code is valid
+    PROCEDURE checkOTP(
+        i_authCode IN otp_tbl.authCode%TYPE,
+        i_uname OUT otp_tbl.uname%TYPE,
+        o_response OUT VARCHAR2)
+    AS
+    BEGIN
+        SELECT uname, 'Success'
+        INTO i_uname, o_response
+        FROM otp_tbl
+        WHERE authCode = i_authCode
+          AND lapse >= systimestamp;
+    END checkOTP;
+
 END auth_pkg;
 /
 
