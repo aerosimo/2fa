@@ -4,7 +4,7 @@
  * Author:    Aerosimo                                                        *
  * File:      auth.sql                                                        *
  * Created:   04/10/2021, 21:09                                               *
- * Modified:  04/10/2021, 21:09                                               *
+ * Modified:  11/10/2021, 06:37                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -35,6 +35,7 @@ CREATE TABLE auth_tbl
     uname         VARCHAR2(400 byte),
     pword         VARCHAR2(4000 byte),
     email         VARCHAR2(400 byte),
+    mfa_enabled   CHAR(1),
     status        VARCHAR2(20 byte),
     created_date  TIMESTAMP,
     modified_date TIMESTAMP
@@ -60,11 +61,12 @@ CREATE TABLE otp_tbl
 COMMENT ON COLUMN auth_tbl.uname IS 'This is contact username and a primary identifier.';
 COMMENT ON COLUMN auth_tbl.pword IS 'This is contact set encrypted password';
 COMMENT ON COLUMN auth_tbl.email IS 'Electronic mail is a method of exchanging messages between people using electronic devices.';
+COMMENT ON COLUMN auth_tbl.mfa_enabled IS 'This will indicate if multi-factor authentication is enabled or not.';
 COMMENT ON COLUMN auth_tbl.status IS 'This the state of the user account either active or inactive.';
 COMMENT ON COLUMN auth_tbl.created_date IS 'Audit column - date it was first created.';
 COMMENT ON COLUMN auth_tbl.modified_date IS 'Audit column - date of last update.';
-COMMENT ON TABLE auth_tbl IS 'A user account is a location on a network server used to store a computer username, password, and other information.
-	A user account allows or does not allow a user to connect to a network, another computer, or other shares.';
+COMMENT ON TABLE auth_tbl IS 'A user account is a location on a network server used to store a computer username, password, and other information.';
+
 COMMENT ON COLUMN audit_tbl.uname IS 'This is the primary identifier';
 COMMENT ON COLUMN audit_tbl.inet IS 'This store user ip address';
 COMMENT ON COLUMN audit_tbl.login IS 'This is the time a user login to the system';
@@ -93,6 +95,8 @@ ALTER TABLE otp_tbl
 
 -- Setting Check Constraint
 ALTER TABLE auth_tbl
+    ADD CONSTRAINT mfa_chk CHECK (mfa_enabled IN ('Y', 'N')) ENABLE;
+ALTER TABLE auth_tbl
     ADD CONSTRAINT authstatus_chk CHECK (status IN ('Active', 'Inactive', 'Closed')) ENABLE;
 ALTER TABLE otp_tbl
     ADD CONSTRAINT otpstatus_chk CHECK (status IN ('Pending', 'Closed')) ENABLE;
@@ -103,6 +107,11 @@ CREATE OR REPLACE TRIGGER insertauth_trg
     ON auth_tbl
     FOR EACH ROW
 BEGIN
+    IF :NEW.mfa_enabled IS NULL THEN
+        SELECT 'N'
+        INTO :NEW.mfa_enabled
+        FROM dual;
+    END IF;
     SELECT 'Inactive' INTO :NEW.status FROM dual;
     SELECT SYSTIMESTAMP INTO :NEW.created_Date FROM DUAL;
 END;
@@ -160,7 +169,7 @@ END;
 /
 
 -- Enable Triggers
-    ALTER TRIGGER insertauth_trg ENABLE;
+ALTER TRIGGER insertauth_trg ENABLE;
 ALTER TRIGGER updateauth_trg ENABLE;
 ALTER TRIGGER insertotp_trg ENABLE;
 ALTER TRIGGER insertaudit_trg ENABLE;
@@ -203,18 +212,18 @@ AS
     =================================================================================
     */
 
-    -- generate verifier access code
-    PROCEDURE setOTP(
-        i_uname IN otp_tbl.uname%TYPE,
-        i_authCode IN otp_tbl.authCode%TYPE,
-        o_authCode OUT otp_tbl.authCode%TYPE,
-        o_expire OUT otp_tbl.lapse%TYPE);
+    -- create user details to authenticate against
+    PROCEDURE signup(
+        i_uname IN auth_tbl.uname%TYPE,
+        i_pword IN auth_tbl.pword%TYPE,
+        i_email IN auth_tbl.email%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2);
 
-    -- log activity time
-    PROCEDURE setAudit(
-        i_uname IN audit_tbl.uname%TYPE,
-        i_inet IN audit_tbl.inet%TYPE,
-        i_action IN VARCHAR2);
+    -- log user out of the session
+    PROCEDURE signout(
+        i_uname IN auth_tbl.uname%TYPE,
+        i_inet IN audit_tbl.inet%TYPE);
 
     -- authenticate user
     PROCEDURE signin(
@@ -227,6 +236,38 @@ AS
         o_expire OUT otp_tbl.lapse%TYPE,
         o_faultcode OUT NUMBER,
         o_faultmsg OUT VARCHAR2);
+
+    -- forgot user details to authenticate against
+    PROCEDURE forgotPassword(
+        i_email IN auth_tbl.email%TYPE,
+        i_authCode IN otp_tbl.authCode%TYPE,
+        o_uname OUT auth_tbl.uname%TYPE,
+        o_authCode OUT otp_tbl.authCode%TYPE,
+        o_expire OUT otp_tbl.lapse%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2);
+
+    -- reset user details to authenticate against
+    PROCEDURE resetPassword(
+        i_authCode IN otp_tbl.authCode%TYPE,
+        i_pword IN auth_tbl.pword%TYPE,
+        o_uname OUT auth_tbl.uname%TYPE,
+        o_email OUT auth_tbl.email%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2);
+
+    -- generate verifier access code
+    PROCEDURE setOTP(
+        i_uname IN otp_tbl.uname%TYPE,
+        i_authCode IN otp_tbl.authCode%TYPE,
+        o_authCode OUT otp_tbl.authCode%TYPE,
+        o_expire OUT otp_tbl.lapse%TYPE);
+
+    -- log activity time
+    PROCEDURE setAudit(
+        i_uname IN audit_tbl.uname%TYPE,
+        i_inet IN audit_tbl.inet%TYPE,
+        i_action IN VARCHAR2);
 
     -- check the access code is valid
     PROCEDURE checkOTP(
@@ -273,6 +314,35 @@ AS
     | 04-OCT-21	| eomisore 	| Created initial script.|
     =================================================================================
     */
+
+    -- create user details to authenticate against
+    PROCEDURE signup(
+        i_uname IN auth_tbl.uname%TYPE,
+        i_pword IN auth_tbl.pword%TYPE,
+        i_email IN auth_tbl.email%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2)
+    AS
+    BEGIN
+        INSERT INTO auth_tbl (uname, email, pword)
+        VALUES (i_uname, i_email, enc_dec.encrypt(i_pword));
+        o_faultCode := 0;
+        o_faultMsg := 'Success';
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            O_faultCode := SQLCODE;
+            O_faultMsg := SUBSTR(SQLERRM, 1, 2000);
+    END signup;
+
+    -- log user out of the session
+    PROCEDURE signout(
+        i_uname IN auth_tbl.uname%TYPE,
+        i_inet IN audit_tbl.inet%TYPE)
+    AS
+    BEGIN
+        setAudit(i_uname, i_inet, 'logout');
+    END signout;
 
     -- generate verifier access code
     PROCEDURE setOTP(
@@ -375,14 +445,85 @@ AS
         INTO i_uname, o_response
         FROM otp_tbl
         WHERE authCode = i_authCode
-          AND lapse >= systimestamp;
+          AND lapse < systimestamp;
+        IF SQL%NOTFOUND THEN
+            RAISE NO_DATA_FOUND;
+        END IF;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            o_response := 'The otp token is not valid or expired';
+        WHEN OTHERS THEN
+            ROLLBACK;
+            o_response := SUBSTR(SQLERRM, 1, 2000);
     END checkOTP;
+
+    -- forgot user details to authenticate against
+    PROCEDURE forgotPassword(
+        i_email IN auth_tbl.email%TYPE,
+        i_authCode IN otp_tbl.authCode%TYPE,
+        o_uname OUT auth_tbl.uname%TYPE,
+        o_authCode OUT otp_tbl.authCode%TYPE,
+        o_expire OUT otp_tbl.lapse%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2)
+    AS
+        match_count NUMBER;
+    BEGIN
+        SELECT COUNT(uname) INTO match_count FROM auth_tbl WHERE email = i_email;
+        IF match_count = 1 THEN
+            SELECT uname INTO o_uname FROM auth_tbl WHERE email = i_email;
+            setOTP(o_uname,i_authCode,o_authCode,o_expire);
+            UPDATE auth_tbl SET status = 'Inactive' WHERE email = i_email;
+            o_faultCode := 0;
+            o_faultMsg := 'Success';
+        END IF;
+        IF SQL%NOTFOUND THEN
+            RAISE NO_DATA_FOUND;
+        END IF;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            o_faultCode := -20002;
+            o_faultMsg := 'The provided email is not valid or found';
+        WHEN OTHERS THEN
+            ROLLBACK;
+            O_faultCode := SQLCODE;
+            O_faultMsg := SUBSTR(SQLERRM, 1, 2000);
+    END forgotPassword;
+
+    -- reset user details to authenticate against
+    PROCEDURE resetPassword(
+        i_authCode IN otp_tbl.authCode%TYPE,
+        i_pword IN auth_tbl.pword%TYPE,
+        o_uname OUT auth_tbl.uname%TYPE,
+        o_email OUT auth_tbl.email%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2)
+    AS
+        fmsg       VARCHAR2(4000 byte);
+    BEGIN
+        checkOTP(i_authCode, o_uname, fmsg);
+        IF fmsg = 'Success' THEN
+            UPDATE auth_tbl
+            SET status = 'Active',
+                pword  = enc_dec.encrypt(i_pword)
+            WHERE uname = o_uname
+            RETURNING email INTO o_email;
+            o_faultCode := 0;
+            o_faultMsg := 'Success';
+        ELSE
+            o_faultCode := 0;
+            o_faultMsg := fmsg;
+        END IF;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            O_faultCode := SQLCODE;
+            O_faultMsg := SUBSTR(SQLERRM, 1, 2000);
+    END resetPassword;
 
 END auth_pkg;
 /
 
 ALTER PACKAGE auth_pkg COMPILE PACKAGE;
 ALTER PACKAGE auth_pkg COMPILE BODY;
-
-show errors
 /
