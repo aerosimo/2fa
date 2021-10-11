@@ -32,29 +32,25 @@
 package com.aerosimo.monitor;
 
 import com.aerosimo.dao.AuthAPI;
-import com.aerosimo.util.Log;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(name = "RegisterServlet", description = "A simple registration servlet to capture the information from registration form", urlPatterns = "/signup")
 public class Signup extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        Log.info("Signup Servlet is successfully called");
         String uname, email, response;
         uname = req.getParameter("uname");
         email = req.getParameter("email");
         response = AuthAPI.signup(uname, email);
-        if (response == "Success") {
-            resp.sendRedirect("signin.html");
-        } else {
-            resp.sendRedirect("signup.html");
-        }
-        Log.info("Signup Servlet action is complete successfully");
+        PrintWriter out = resp.getWriter();
+        out.println("<HTML><HEAD><TITLE>Registration Response!</TITLE></HEAD><BODY>Hello " + uname + ", <P> The response from the app is " + response + "!</P></BODY></HTML>");
+        out.close();
     }
 }
