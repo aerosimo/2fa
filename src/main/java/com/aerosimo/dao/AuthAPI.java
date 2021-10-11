@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      LogTest.java                                                    *
- * Created:   11/10/2021, 22:44                                               *
- * Modified:  11/10/2021, 22:44                                               *
+ * File:      AuthAPI.java                                                    *
+ * Created:   11/10/2021, 23:18                                               *
+ * Modified:  11/10/2021, 23:18                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,57 +29,55 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.util;
+package com.aerosimo.dao;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.aerosimo.util.DBCon;
+import com.aerosimo.util.GeneratePassword;
+import com.aerosimo.util.Log;
 
-class LogTest {
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Objects;
 
-    @BeforeEach
-    void setUp() {
-        Log.info("Starting Log Test");
-    }
+public class AuthAPI {
 
-    @AfterEach
-    void tearDown() {
-        Log.info("Log Test complete");
-    }
-    @Test
-    @DisplayName("Checking Info Level Logs")
-    void info() {
-        Log.info("Designates informational messages that highlight the progress of the application at coarse-grained level.");
-    }
-
-    @Test
-    @DisplayName("Checking Warn Level Logs")
-    void warn() {
-        Log.warn("Designates potentially harmful situations.");
-    }
-
-    @Test
-    @DisplayName("Checking Error Level Logs")
-    void error() {
-        Log.error("Designates error events that might still allow the application to continue running.");
-    }
-
-    @Test
-    @DisplayName("Checking Fatal Level Logs")
-    void fatal() {
-        Log.fatal("Designates very severe error events that will presumably lead the application to abort.");
-    }
-
-    @Test
-    @DisplayName("Checking Debug Level Logs")
-    void debug() {
-        Log.debug("Designates fine-grained informational events that are most useful to debug an application.");
-    }
-
-    @Test
-    @DisplayName("Checking Trace Level Logs")
-    void trace() {
-        Log.trace("Designates finer-grained informational events than the DEBUG.");
+    public static String signup(String username, String emailAddress) {
+        CallableStatement stmt;
+        stmt = null;
+        Connection con;
+        con = DBCon.getConnection();
+        String response;
+        response = "";
+        String sql;
+        String password;
+        sql = "{call auth_pkg.signup(?,?,?,?,?)}";
+        password = GeneratePassword.getPassword();
+        try {
+            stmt = con.prepareCall(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            stmt.setString(3, emailAddress);
+            stmt.registerOutParameter(4, Types.VARCHAR);
+            stmt.registerOutParameter(5, Types.VARCHAR);
+            stmt.execute();
+            if (Objects.equals(stmt.getString(5), "Success")) {
+                response = stmt.getString(5);
+                Log.info("Account Registration is successful for " + username + " thi the password " + password + " All this information will be emailed to this address " + emailAddress);
+            } else {
+                Log.error("Signup fails because CODE: " + stmt.getString(4) + " DETAILS: " + stmt.getString(5));
+            }
+        } catch (SQLException err) {
+            Log.warn("Registration attempt failed with the following details at AuthAPI.signup: DETAILS: " + err);
+        } finally {
+            try {
+                assert stmt != null;
+                stmt.close();
+            } catch (SQLException err) {
+                Log.fatal("Registration attempt failed with the following details at AuthAPI.signup: DETAILS: " + err);
+            }
+        }
+        return response;
     }
 }

@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      LogTest.java                                                    *
- * Created:   11/10/2021, 22:44                                               *
- * Modified:  11/10/2021, 22:44                                               *
+ * File:      Signup.java                                                     *
+ * Created:   11/10/2021, 23:35                                               *
+ * Modified:  11/10/2021, 23:35                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,57 +29,32 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.util;
+package com.aerosimo.monitor;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.aerosimo.dao.AuthAPI;
+import com.aerosimo.util.Log;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-class LogTest {
+import java.io.IOException;
 
-    @BeforeEach
-    void setUp() {
-        Log.info("Starting Log Test");
-    }
-
-    @AfterEach
-    void tearDown() {
-        Log.info("Log Test complete");
-    }
-    @Test
-    @DisplayName("Checking Info Level Logs")
-    void info() {
-        Log.info("Designates informational messages that highlight the progress of the application at coarse-grained level.");
-    }
-
-    @Test
-    @DisplayName("Checking Warn Level Logs")
-    void warn() {
-        Log.warn("Designates potentially harmful situations.");
-    }
-
-    @Test
-    @DisplayName("Checking Error Level Logs")
-    void error() {
-        Log.error("Designates error events that might still allow the application to continue running.");
-    }
-
-    @Test
-    @DisplayName("Checking Fatal Level Logs")
-    void fatal() {
-        Log.fatal("Designates very severe error events that will presumably lead the application to abort.");
-    }
-
-    @Test
-    @DisplayName("Checking Debug Level Logs")
-    void debug() {
-        Log.debug("Designates fine-grained informational events that are most useful to debug an application.");
-    }
-
-    @Test
-    @DisplayName("Checking Trace Level Logs")
-    void trace() {
-        Log.trace("Designates finer-grained informational events than the DEBUG.");
+@WebServlet(name = "RegisterServlet", description = "A simple registration servlet to capture the information from registration form", urlPatterns = "/signup")
+public class Signup extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        Log.info("Signup Servlet is successfully called");
+        String uname, email, response;
+        uname = req.getParameter("uname");
+        email = req.getParameter("email");
+        response = AuthAPI.signup(uname, email);
+        if (response == "Success") {
+            resp.sendRedirect("signin.html");
+        } else {
+            resp.sendRedirect("signup.html");
+        }
+        Log.info("Signup Servlet action is complete successfully");
     }
 }

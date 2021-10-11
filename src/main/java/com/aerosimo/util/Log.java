@@ -40,7 +40,7 @@ public class Log {
     private static final Logger Log;
 
     static {
-        Log = LogManager.getLogger(Log.class);
+        Log = LogManager.getLogger(Log.class.getName());
     }
 
     //Info Level Logs
