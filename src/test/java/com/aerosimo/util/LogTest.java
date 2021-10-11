@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      GenerateOTPTest.java                                            *
- * Created:   04/10/2021, 19:10                                               *
- * Modified:  04/10/2021, 19:10                                               *
+ * File:      LogTest.java                                                    *
+ * Created:   11/10/2021, 22:44                                               *
+ * Modified:  11/10/2021, 22:44                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -31,28 +31,44 @@
 
 package com.aerosimo.util;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+class LogTest {
 
-class GenerateOTPTest {
-
-    @BeforeEach
-    void setUp() {
-        Log.info("Starting Generate One Time Password Test");
-    }
-
-    @AfterEach
-    void tearDown() {
-        Log.info("Generate One Time Password Test complete");
+    @Test
+    @DisplayName("Checking Info Level Logs")
+    void info() {
+        Log.info("Designates informational messages that highlight the progress of the application at coarse-grained level.");
     }
 
     @Test
-    @DisplayName("Checking the OTP is generated")
-    void getOTP() {
-        assertNotNull(GenerateOTP.getOTP(), "Checking that the otp is generated");
+    @DisplayName("Checking Warn Level Logs")
+    void warn() {
+        Log.warn("Designates potentially harmful situations.");
+    }
+
+    @Test
+    @DisplayName("Checking Error Level Logs")
+    void error() {
+        Log.error("Designates error events that might still allow the application to continue running.");
+    }
+
+    @Test
+    @DisplayName("Checking Fatal Level Logs")
+    void fatal() {
+        Log.fatal("Designates very severe error events that will presumably lead the application to abort.");
+    }
+
+    @Test
+    @DisplayName("Checking Debug Level Logs")
+    void debug() {
+        Log.debug("Designates fine-grained informational events that are most useful to debug an application.");
+    }
+
+    @Test
+    @DisplayName("Checking Trace Level Logs")
+    void trace() {
+        Log.trace("Designates finer-grained informational events than the DEBUG.");
     }
 }

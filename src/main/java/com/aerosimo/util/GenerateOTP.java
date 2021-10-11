@@ -31,18 +31,9 @@
 
 package com.aerosimo.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.Random;
 
 public class GenerateOTP {
-
-    static Logger log;
-
-    static {
-        log = LogManager.getLogger(GenerateOTP.class.getName());
-    }
 
     public static String getOTP() {
         String response;
@@ -60,7 +51,7 @@ public class GenerateOTP {
             randStr.append(ch);
         }
         response = randStr.toString();
-        log.info("OTP Generation {" + response + "} is successful");
+        Log.info("OTP Generation {" + response + "} is successful");
 
         return response;
     }

@@ -42,10 +42,12 @@ class GeneratePasswordTest {
 
     @BeforeEach
     void setUp() {
+        Log.info("Starting Generate Initial Password Test");
     }
 
     @AfterEach
     void tearDown() {
+        Log.info("Generate Initial Password Test complete");
     }
 
     @Test

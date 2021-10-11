@@ -31,18 +31,9 @@
 
 package com.aerosimo.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.Random;
 
 public class GeneratePassword {
-
-    static Logger log;
-
-    static {
-        log = LogManager.getLogger(GeneratePassword.class.getName());
-    }
 
     public static String getPassword() {
         String response;
@@ -60,7 +51,7 @@ public class GeneratePassword {
             randStr.append(ch);
         }
         response = randStr.toString();
-        log.info("Password Generation {" + response + "} is successful");
+        Log.info("Password Generation {" + response + "} is successful");
         return response;
     }
 }

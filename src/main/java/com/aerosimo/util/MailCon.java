@@ -34,20 +34,12 @@ package com.aerosimo.util;
 import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.Properties;
 import java.util.Scanner;
 
 public class MailCon {
-
-    static Logger log;
-
-    static {
-        log = LogManager.getLogger(MailCon.class.getName());
-    }
 
     public static Session getSession() {
 
@@ -71,9 +63,9 @@ public class MailCon {
                 emailSSL = myReader.nextLine();
             }
             myReader.close();
-            log.info("Successful reading email credentials");
+            Log.info("Successful reading email credentials");
         } catch (Exception e) {
-            log.error("Error reading email credentials: " + e);
+            Log.error("Error reading email credentials: " + e);
         }
 
         final String emailUserName;
@@ -99,9 +91,9 @@ public class MailCon {
             };
             sess = Session.getInstance(prop, auth);
         } catch (Exception e) {
-            log.error("Email Connection Error : " + e);
+            Log.error("Email Connection Error : " + e);
         }
-        log.info("Email session is established successfully");
+        Log.info("Email session is established successfully");
         return sess;
     }
 }

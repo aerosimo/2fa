@@ -31,9 +31,6 @@
 
 package com.aerosimo.util;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -42,12 +39,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DBCon {
-
-    static Logger log;
-
-    static {
-        log = LogManager.getLogger(DBCon.class.getName());
-    }
 
     public static Connection getConnection() {
 
@@ -58,9 +49,9 @@ public class DBCon {
             ctx = new InitialContext();
             ds = (DataSource) ctx.lookup("java:/comp/env/jdbc/HATSDB");
             con = ds.getConnection();
-            log.info("Database Connection is successful");
+            Log.info("Database Connection is successful");
         } catch (NamingException | SQLException e) {
-            log.error("Database Connection Error: " + e);
+            Log.error("Database Connection Error: " + e);
         }
         return con;
     }

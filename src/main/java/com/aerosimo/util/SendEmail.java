@@ -40,18 +40,11 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Date;
 
 public class SendEmail {
-    static Logger log;
-
-    static {
-        log = LogManager.getLogger(SendEmail.class.getName());
-    }
 
     public static String sendMail(String emailAddress, String emailSubject, String emailMessage, String emailFiles) {
         String response;
@@ -64,15 +57,15 @@ public class SendEmail {
             // Validate email address is not empty
             if (emailAddress.isEmpty()) {
                 response = "CODE: EM1002AER --- DETAILS: Email Address fails validation because it can not be empty";
-                log.error("CODE: EM1002AER --- DETAILS: Email Address fails validation because it can not be empty, SendEmail.sendMail");
+                Log.error("CODE: EM1002AER --- DETAILS: Email Address fails validation because it can not be empty, SendEmail.sendMail");
             } // Validate email subject is not empty
             else if (emailSubject.isEmpty()) {
                 response = "CODE: EM1003AER --- DETAILS: Email Subject fails validation because it can not be empty";
-                log.error("CODE: EM1003AER --- DETAILS: Email Subject fails validation because it can not be empty, SendEmail.sendMail");
+                Log.error("CODE: EM1003AER --- DETAILS: Email Subject fails validation because it can not be empty, SendEmail.sendMail");
             } // Validate email message is not empty
             else if (emailMessage.isEmpty()) {
                 response = "CODE: EM1004AER --- DETAILS: Email Message fails validation because it can not be empty";
-                log.error("CODE: EM1004AER --- DETAILS: Email Message fails validation because it can not be empty, SendEmail.sendMail");
+                Log.error("CODE: EM1004AER --- DETAILS: Email Message fails validation because it can not be empty, SendEmail.sendMail");
             } // When all passes send mail as seen below
             else {
                 try {
@@ -86,24 +79,24 @@ public class SendEmail {
                     Transport.send(msg);
                 } catch (MessagingException err) {
                     response = "CODE: EM1007AER --- DETAILS: A communication failure occurred during the delivery of this message.";
-                    log.error("CODE: EM1007AER --- DETAILS: A communication failure occurred during the delivery of this message. Please try to resend the message later. " + err + " SendEmail.sendMail");
+                    Log.error("CODE: EM1007AER --- DETAILS: A communication failure occurred during the delivery of this message. Please try to resend the message later. " + err + " SendEmail.sendMail");
                 }
             }
         } else if (EmailValidator.getInstance().isValid(emailAddress) && !emailFiles.isEmpty()) {
             if (emailAddress.isEmpty()) {
                 response = "CODE: EM1002AER --- DETAILS: Email Address fails validation because it can not be empty";
-                log.error("CODE: EM1002AER --- DETAILS: Email Address fails validation because it can not be empty, SendEmail.sendMail");
+                Log.error("CODE: EM1002AER --- DETAILS: Email Address fails validation because it can not be empty, SendEmail.sendMail");
             } // Validate email subject is not empty
             else if (emailSubject.isEmpty()) {
                 response = "CODE: EM1003AER --- DETAILS: Email Subject fails validation because it can not be empty";
-                log.error("CODE: EM1003AER --- DETAILS: Email Subject fails validation because it can not be empty, SendEmail.sendMail");
+                Log.error("CODE: EM1003AER --- DETAILS: Email Subject fails validation because it can not be empty, SendEmail.sendMail");
             } // Validate email message is not empty
             else if (emailMessage.isEmpty()) {
                 response = "CODE: EM1004AER --- DETAILS: Email Message fails validation because it can not be empty";
-                log.error("CODE: EM1004AER --- DETAILS: Email Message fails validation because it can not be empty, SendEmail.sendMail");
+                Log.error("CODE: EM1004AER --- DETAILS: Email Message fails validation because it can not be empty, SendEmail.sendMail");
             } else if (emailFiles.isEmpty()) {
                 response = "CODE: EM1005AER --- DETAILS: Email Attachment fails validation because it can not be empty";
-                log.error("CODE: EM1005AER --- DETAILS: Email Attachment fails validation because it can not be empty, SendEmail.sendMail");
+                Log.error("CODE: EM1005AER --- DETAILS: Email Attachment fails validation because it can not be empty, SendEmail.sendMail");
             } // When all passes send mail as seen below
             else {
                 try {
@@ -125,7 +118,7 @@ public class SendEmail {
                             attachPart.attachFile(filePath);
                         } catch (IOException ex) {
                             response = "CODE: EM1006AER --- DETAILS: Attachment Error: Could not find the file to be attached";
-                            log.error("CODE: EM1006AER --- DETAILS: Attachment Error: Could not find the file to be attached. " + ex + " SendEmail.sendAttachment");
+                            Log.error("CODE: EM1006AER --- DETAILS: Attachment Error: Could not find the file to be attached. " + ex + " SendEmail.sendAttachment");
                         }
                         multipart.addBodyPart(attachPart);
                     }
@@ -133,7 +126,7 @@ public class SendEmail {
                     Transport.send(msg);
                 } catch (MessagingException err) {
                     response = "CODE: EM1007AER --- DETAILS: A communication failure occurred during the delivery of this message.";
-                    log.error("CODE: EM1007AER --- DETAILS: A communication failure occurred during the delivery of this message. Please try to resend the message later. " + err + " SendEmail.sendMail");
+                    Log.error("CODE: EM1007AER --- DETAILS: A communication failure occurred during the delivery of this message. Please try to resend the message later. " + err + " SendEmail.sendMail");
                 }
             }
         }

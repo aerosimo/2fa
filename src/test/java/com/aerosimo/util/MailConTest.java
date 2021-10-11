@@ -42,14 +42,16 @@ class MailConTest {
 
     @BeforeEach
     void setUp() {
+        Log.info("Starting Email Session Test");
     }
 
     @AfterEach
     void tearDown() {
+        Log.info("Email Session Test complete");
     }
 
     @Test
-    @DisplayName("Unit Testing Email conn")
+    @DisplayName("Unit Testing Email connection")
     void getSession() {
         assertNotNull(MailCon.getSession(), "Checking that the email session is obtained");
     }

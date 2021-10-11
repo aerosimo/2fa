@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      GenerateOTPTest.java                                            *
- * Created:   04/10/2021, 19:10                                               *
- * Modified:  04/10/2021, 19:10                                               *
+ * File:      Log.java                                                        *
+ * Created:   11/10/2021, 22:30                                               *
+ * Modified:  11/10/2021, 22:30                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -31,28 +31,40 @@
 
 package com.aerosimo.util;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+public class Log {
 
-class GenerateOTPTest {
+    //Initialize Log4j instance
+    private static final Logger Log;
 
-    @BeforeEach
-    void setUp() {
-        Log.info("Starting Generate One Time Password Test");
+    static {
+        Log = LogManager.getLogger(Log.class.getName());
     }
 
-    @AfterEach
-    void tearDown() {
-        Log.info("Generate One Time Password Test complete");
+    //Info Level Logs
+    public static void info (String message) {
+        Log.info(message);
     }
-
-    @Test
-    @DisplayName("Checking the OTP is generated")
-    void getOTP() {
-        assertNotNull(GenerateOTP.getOTP(), "Checking that the otp is generated");
+    //Warn Level Logs
+    public static void warn (String message) {
+        Log.warn(message);
+    }
+    //Error Level Logs
+    public static void error (String message) {
+        Log.error(message);
+    }
+    //Fatal Level Logs
+    public static void fatal (String message) {
+        Log.fatal(message);
+    }
+    //Debug Level Logs
+    public static void debug (String message) {
+        Log.debug(message);
+    }
+    //Trace Level Logs
+    public static void trace (String message) {
+        Log.trace(message);
     }
 }
