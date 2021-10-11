@@ -54,11 +54,6 @@ public class AuthAPI {
         String password;
         sql = "{call auth_pkg.signup(?,?,?,?,?,?)}";
         password = GeneratePassword.getPassword();
-        if (mfa.isEmpty()){
-            mfa = "N";
-        } else {
-            mfa = "Y";
-        }
         try {
             stmt = con.prepareCall(sql);
             stmt.setString(1, username);
