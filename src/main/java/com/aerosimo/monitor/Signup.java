@@ -32,7 +32,6 @@
 package com.aerosimo.monitor;
 
 import com.aerosimo.dao.AuthAPI;
-import com.aerosimo.util.Log;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,9 +51,8 @@ public class Signup extends HttpServlet {
         uname = req.getParameter("uname");
         email = req.getParameter("email");
         mfa = req.getParameter("checkbox");
-        Log.info("Calling Authentication API from Signup");
         response = AuthAPI.signup(uname, email, mfa);
-        if (response.equals("Success")){
+        if (response.equals("Success")) {
             resp.sendRedirect("signin.html");
         } else {
             resp.sendRedirect("signup.html");
