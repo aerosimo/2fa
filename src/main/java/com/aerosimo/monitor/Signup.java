@@ -52,11 +52,7 @@ public class Signup extends HttpServlet {
         uname = req.getParameter("uname");
         email = req.getParameter("email");
         mfa = req.getParameter("checkbox");
-        if (mfa.isEmpty()){
-            mfa = "N";
-        } else {
-            mfa = "Y";
-        }
+
         response = AuthAPI.signup(uname, email, mfa);
         PrintWriter out = resp.getWriter();
         out.println("<HTML><HEAD><TITLE>Registration Response!</TITLE></HEAD><BODY>Hello " + uname + ", <P> The response from the app is " + response + "!</P><P> The mfa is "+ mfa + "!</P></BODY></HTML>");
