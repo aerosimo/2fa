@@ -67,7 +67,7 @@ public class AuthAPI {
                 response = stmt.getString(6);
                 Log.info("Account Registration is successful for " + username + " thi the password " + password + " All this information will be emailed to this address " + emailAddress);
             } else {
-                Log.error("Signup fails because CODE: " + stmt.getString(4) + " DETAILS: " + stmt.getString(6));
+                Log.error("Signup fails because CODE: " + stmt.getString(5) + " DETAILS: " + stmt.getString(6));
             }
         } catch (SQLException err) {
             Log.warn("Registration attempt failed with the following details at AuthAPI.signup: DETAILS: " + err);
