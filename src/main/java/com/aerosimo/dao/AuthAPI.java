@@ -31,6 +31,7 @@
 
 package com.aerosimo.dao;
 
+import com.aerosimo.mail.TempPasswordMail;
 import com.aerosimo.util.DBCon;
 import com.aerosimo.util.GeneratePassword;
 import com.aerosimo.util.Log;
@@ -65,7 +66,7 @@ public class AuthAPI {
             stmt.execute();
             if (Objects.equals(stmt.getString(6), "Success")) {
                 response = stmt.getString(6);
-                Log.info("Account Registration is successful for " + username + " the password " + password + " All this information will be emailed to this address " + emailAddress);
+                TempPasswordMail.sendPasswordMail(password,emailAddress);
             } else {
                 Log.error("Signup fails because CODE: " + stmt.getString(5) + " DETAILS: " + stmt.getString(6));
             }
