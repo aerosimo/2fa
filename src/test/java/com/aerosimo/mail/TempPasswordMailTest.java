@@ -52,8 +52,11 @@ class TempPasswordMailTest {
     @Test
     @DisplayName("Unit Testing TempPasswordMail")
     void sendPasswordMail() {
-        String response;
-        response = TempPasswordMail.sendPasswordMail("ABCDEFGHIJKLMNOPQRSTUVWXYZ","babyboi@omisore.co.uk");
-        assertNotNull(response, "Checking that the email is sent");
+        String actual;
+        String expected;
+        actual = TempPasswordMail.sendPasswordMail("ABCDEFGHIJKLMNOPQRSTUVWXYZ","support@aerosimo.com");
+        assertNotNull(actual, "Checking that the email response is not null");
+        expected = "Email Sent Successfully";
+        Assertions.assertEquals(expected, actual, "This should match a the success message from the mail api");
     }
 }

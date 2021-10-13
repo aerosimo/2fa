@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      SendEmailTest.java                                              *
- * Created:   13/10/2021, 19:26                                               *
- * Modified:  13/10/2021, 19:26                                               *
+ * File:      OTPMailTest.java                                                *
+ * Created:   13/10/2021, 20:41                                               *
+ * Modified:  13/10/2021, 20:41                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,34 +29,32 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.util;
+package com.aerosimo.mail;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.aerosimo.util.Log;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-class SendEmailTest {
+class OTPMailTest {
 
     @BeforeEach
     void setUp() {
-        Log.info("Starting Utility Email Test");
+        Log.info("Starting One-Time Password Email Test");
     }
 
     @AfterEach
     void tearDown() {
-        Log.info("Utility Email Test complete");
+        Log.info("One-Time Password Email Test complete");
     }
 
+
     @Test
-    @DisplayName("Unit Testing SendMail")
-    void sendMail() {
+    @DisplayName("Unit Testing OTPMail")
+    void sendOTP() {
         String actual;
         String expected;
-        actual = SendEmail.sendMail("support@aerosimo.com", "Test Email", "This is a test email. With thousands of potential renderings, spam filters on high alert, and the constant risk of broken links, email testing isn’t a nice-to-have—it’s a need-to-have.");
+        actual = OTPMail.sendOTP("Support","350268","support@aerosimo.com");
         assertNotNull(actual, "Checking that the email response is not null");
         expected = "Email Sent Successfully";
         Assertions.assertEquals(expected, actual, "This should match a the success message from the mail api");

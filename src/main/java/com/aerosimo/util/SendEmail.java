@@ -44,7 +44,7 @@ public class SendEmail {
 
     public static String sendMail(String emailAddress, String emailSubject, String emailMessage) {
         String response;
-        response = "CODE: 0 --- DETAILS: Email Sent Successfully";
+        response = "Email Sent Successfully";
 
         // Validate email address is correct
         if (EmailValidator.getInstance().isValid(emailAddress)) {
