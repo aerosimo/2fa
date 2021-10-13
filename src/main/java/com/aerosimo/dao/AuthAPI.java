@@ -65,8 +65,7 @@ public class AuthAPI {
             stmt.registerOutParameter(6, Types.VARCHAR);
             stmt.execute();
             if (Objects.equals(stmt.getString(6), "Success")) {
-                response = stmt.getString(6);
-                TempPasswordMail.sendPasswordMail(password,emailAddress);
+                response = stmt.getString(6) + " - " + TempPasswordMail.sendPasswordMail(password,emailAddress);
                 Log.info("Account Registration is successful for " + username + " the password " + password + " All this information will be emailed to this address " + emailAddress);
             } else {
                 Log.error("Signup fails because CODE: " + stmt.getString(5) + " DETAILS: " + stmt.getString(6));
