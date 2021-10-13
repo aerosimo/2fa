@@ -83,7 +83,7 @@ public class TempPasswordMail {
                 "      </table>\n" +
                 "   </div>\n" +
                 "</div>");
-        response = SendEmail.sendMail(emailAddress,"Authentication Temporary Password",message.toString(),null);
+        response = SendEmail.sendMail(emailAddress,"Authentication Temporary Password",message.toString());
         Log.info("Email response is: " + response);
         return response;
     }

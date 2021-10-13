@@ -32,10 +32,7 @@
 package com.aerosimo.mail;
 
 import com.aerosimo.util.Log;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -53,6 +50,7 @@ class TempPasswordMailTest {
 
 
     //@Test
+    @DisplayName("Unit Testing TempPasswordMail")
     @Disabled
     void sendPasswordMail() {
         String response;

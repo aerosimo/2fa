@@ -33,6 +33,8 @@ package com.aerosimo.util;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -50,9 +52,13 @@ class SendEmailTest {
     }
 
     @Test
+    @DisplayName("Unit Testing SendMail")
     void sendMail() {
-        String response;
-        response = SendEmail.sendMail("support@aerosimo.com", "Test Email", "This is a test email. With thousands of potential renderings, spam filters on high alert, and the constant risk of broken links, email testing isn’t a nice-to-have—it’s a need-to-have.", null);
-        assertNotNull(response, "Checking that the email is sent");
+        String actual;
+        String expected;
+        actual = SendEmail.sendMail("support@aerosimo.com", "Test Email", "This is a test email. With thousands of potential renderings, spam filters on high alert, and the constant risk of broken links, email testing isn’t a nice-to-have—it’s a need-to-have.");
+        assertNotNull(actual, "Checking that the email response is not null");
+        expected = "CODE: 0 --- DETAILS: Email Sent Successfully";
+        Assertions.assertEquals(expected, actual, "This should match a the success message from the mail api");
     }
 }
