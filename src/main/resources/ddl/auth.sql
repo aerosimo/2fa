@@ -97,7 +97,7 @@ ALTER TABLE otp_tbl
 ALTER TABLE auth_tbl
     ADD CONSTRAINT mfa_chk CHECK (mfa_enabled IN ('Y', 'N')) ENABLE;
 ALTER TABLE auth_tbl
-    ADD CONSTRAINT authstatus_chk CHECK (status IN ('Active', 'Inactive', 'Closed')) ENABLE;
+    ADD CONSTRAINT authstatus_chk CHECK (status IN ('Active', 'Inactive', 'Closed', 'Temp')) ENABLE;
 ALTER TABLE otp_tbl
     ADD CONSTRAINT otpstatus_chk CHECK (status IN ('Pending', 'Closed')) ENABLE;
 
@@ -112,7 +112,7 @@ BEGIN
         INTO :NEW.mfa_enabled
         FROM dual;
     END IF;
-    SELECT 'Inactive' INTO :NEW.status FROM dual;
+    SELECT 'Temp' INTO :NEW.status FROM dual;
     SELECT SYSTIMESTAMP INTO :NEW.created_Date FROM DUAL;
 END;
 /
@@ -404,23 +404,25 @@ AS
         o_faultmsg OUT VARCHAR2)
     AS
         match_count NUMBER;
+        x_status    VARCHAR2(20 byte);
     BEGIN
         SELECT (SELECT COUNT(uname)
                 FROM auth_tbl
                 WHERE uname = i_uname
-                  AND enc_dec.decrypt(pword) = i_pword
-                  AND status = 'Active'),
-               email
-        INTO match_count, o_email
+                  AND enc_dec.decrypt(pword) = i_pword),
+               email, status
+        INTO match_count, o_email, x_status
         FROM auth_tbl
         WHERE uname = i_uname
-          AND enc_dec.decrypt(pword) = i_pword
-          AND status = 'Active';
-        IF (match_count = 1) THEN
+          AND enc_dec.decrypt(pword) = i_pword;
+        IF (match_count = 1 AND x_status ='Active') THEN
             setAudit(i_uname, i_inet, 'login');
             setOTP(i_uname, i_authCode, o_authCode, o_expire);
             o_faultcode := 0;
             o_faultmsg := 'Success';
+        ELSIF (match_count = 1 AND x_status ='Temp') THEN
+            o_faultcode := 0;
+            o_faultmsg := 'Temporary';
         ELSE
             IF SQL%NOTFOUND THEN
                 RAISE NO_DATA_FOUND;

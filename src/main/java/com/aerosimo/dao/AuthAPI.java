@@ -82,4 +82,10 @@ public class AuthAPI {
         }
         return response;
     }
+
+    public static String tempass(String username, String tempword, String pword) {
+        String response;
+        response = username + tempword + pword;
+        return response;
+    }
 }
