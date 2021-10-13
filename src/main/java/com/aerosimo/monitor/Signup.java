@@ -38,6 +38,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(name = "RegisterServlet", description = "A simple registration servlet to capture the information from registration form", urlPatterns = "/signup")
 public class Signup extends HttpServlet {
@@ -47,15 +48,13 @@ public class Signup extends HttpServlet {
         String uname;
         String email;
         String response;
-        String mfa;
+        String checkbox;
         uname = req.getParameter("uname");
         email = req.getParameter("email");
-        mfa = req.getParameter("checkbox");
-        response = AuthAPI.signup(uname, email, mfa);
-        if (response.equals("Success")) {
-            resp.sendRedirect("signin.html");
-        } else {
-            resp.sendRedirect("signup.html");
-        }
+        checkbox = req.getParameter("checkbox");
+        response = AuthAPI.signup(uname, email, checkbox);
+        PrintWriter out = resp.getWriter();
+        out.println("<HTML><HEAD><TITLE>Registration Response!</TITLE></HEAD><BODY>Hello " + uname + ", <P> The response from the app is " + response + "!</P><P> The mfa is "+ checkbox + "!</P></BODY></HTML>");
+        out.close();
     }
 }

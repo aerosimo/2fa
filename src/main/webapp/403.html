@@ -3,8 +3,8 @@
   ~                                                                           ~
   ~ Author:    Aerosimo                                                       ~
   ~ File:      403.html                                                       ~
-  ~ Created:   04/10/2021, 13:44                                              ~
-  ~ Modified:  04/10/2021, 13:50                                              ~
+  ~ Created:   03/06/2021, 12:53                                              ~
+  ~ Modified:  13/10/2021, 13:32                                              ~
   ~                                                                           ~
   ~ Copyright (c)  2021.  Aerosimo Ltd                                        ~
   ~                                                                           ~
@@ -35,7 +35,7 @@
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Title -->
-    <title>403 FORBIDDEN | 2FA Web Application | Aerosimo Ltd</title>
+    <title>403 FORBIDDEN | Ominet Web Application | Aerosimo Ltd</title>
     <!-- Mobile Specific Meta -->
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
     <!-- Author Meta -->
@@ -43,7 +43,7 @@
     <!-- Meta Description -->
     <meta content="Aerosimo IT Consultancy" name="description">
     <!-- Meta Keyword -->
-    <meta content="2FA, Oracle, Authentication, JDBC, Java, PL/SQL, Tomcat, Maven, Jenkins, Bitbucket, Github, BPMN, UML"
+    <meta content="Aerosimo, Oracle, SOA, OSB, JDBC, Java, PL/SQL, Python, Integration Developer, Apache Tomcat, Maven, Jenkins, Bitbucket, Github, BPMN, UML"
           name="keywords">
     <!-- Meta Description -->
     <meta content="Aerosimo 0.0.1" name="generator">
@@ -52,48 +52,44 @@
     <meta content="Aerosimo" name="apple-mobile-web-app-title">
     <meta content="Aerosimo" name="application-name">
     <!-- Favicon-->
-    <link href="img/favicon.ico" rel="shortcut icon"/>
-    <link href="img/favicon.ico" rel="icon" type="image/x-icon">
-    <link href="img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
-    <link href="img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
-    <link href="img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
-    <link href="img/android-chrome-192x192.png" rel="android-chrome" sizes="192x192">
-    <style>
-        #screen {
-            color: #FFF;
-            background-color: #000000;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0px;
-            left: 0px;
-            font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
-        }
-    </style>
+    <link href="assets/images/favicon.ico" rel="shortcut icon"/>
+    <link href="assets/images/favicon.ico" rel="icon" type="image/x-icon">
+    <link href="assets/images/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="assets/images/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="assets/images/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+    <link href="assets/images/android-chrome-192x192.png" rel="android-chrome" sizes="192x192">
+    <!-- CSS Files -->
+    <link href="assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"/>
+    <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="assets/css/animate.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/sidebar-menu.css" rel="stylesheet"/>
+    <link href="assets/css/app-style.css" rel="stylesheet"/>
+    <link href="assets/css/error.css" rel="stylesheet"/>
 </head>
 <body>
 
-<div id="screen">Web Classes Interface<br>Version 0.0.1, Alpha<br>
-    <p class="text-white">Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-        <br> All rights reserved.
-    </p>
+<h1>403</h1>
+<div><p>> <span>ERROR CODE</span>: "<i>HTTP 403 Forbidden</i>"</p>
+    <p>> <span>ERROR DESCRIPTION</span>: "<i>Access Denied. You Do Not Have The Permission To Access This Page On This
+        Server</i>"</p>
+    <p>> <span>ERROR POSSIBLY CAUSED BY</span>: [<b>execute access forbidden, read access forbidden, write access
+        forbidden, ssl required, ssl 128 required, ip address rejected, client certificate required, site access denied,
+        too many users, invalid configuration, password change, mapper denied access, client certificate revoked,
+        directory listing denied, client access licenses exceeded, client certificate is untrusted or invalid, client
+        certificate has expired or is not yet valid, passport logon failed, source access denied, infinite depth is
+        denied, too many requests from the same client ip</b>...]</p>
+    <p>> <span>SOME PAGES ON THIS SERVER THAT YOU DO HAVE PERMISSION TO ACCESS</span>: [<a href="/">Welcome</a>, <a
+            href="/">Sign Up</a>, <a href="/">Login</a>...]</p>
+    <p>> <span>HAVE A NICE DAY :-)</span></p>
     <br>
-    <div><p>> <span>ERROR CODE</span>: "<i>HTTP 403 Forbidden</i>"</p>
-        <p>> <span><a href="javascript:history.back()">Go Back</a></span></p>
-    </div>
     <br>
-    <br>&nbsp<br>----403 ERROR, FORBIDDEN----<br><br>
-    <div id="denied">access: PERMISSION DENIED....<br><br>
-        <div id="word"></div>
-    </div>
+    <p>> <span><a href="javascript:history.back()">Go Back</a></span></p>
 </div>
 
-<script>
-    var lol = 0
-    var refreshIntervalId = setInterval(function () {
-        old_html = document.getElementById("word").innerHTML;
-        document.getElementById("word").innerHTML = old_html + "Access Denied. You Do Not Have The Permission To Access This Page On This Server!<br>";
-    }, 403);
-</script>
+<!--   Java Script   -->
+<script src="assets/js/error.js"></script>
+
 </body>
 </html>

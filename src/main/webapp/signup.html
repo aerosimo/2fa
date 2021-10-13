@@ -3,8 +3,8 @@
   ~                                                                           ~
   ~ Author:    Aerosimo                                                       ~
   ~ File:      signup.html                                                    ~
-  ~ Created:   05/10/2021, 01:35                                              ~
-  ~ Modified:  11/10/2021, 22:28                                              ~
+  ~ Created:   03/09/2021, 10:37                                              ~
+  ~ Modified:  13/10/2021, 13:32                                              ~
   ~                                                                           ~
   ~ Copyright (c)  2021.  Aerosimo Ltd                                        ~
   ~                                                                           ~
@@ -35,7 +35,7 @@
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Title -->
-    <title>Register | 2FA Web Application | Aerosimo Ltd</title>
+    <title>Register | Ominet Web Application | Aerosimo Ltd</title>
     <!-- Mobile Specific Meta -->
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
     <!-- Author Meta -->
@@ -43,7 +43,7 @@
     <!-- Meta Description -->
     <meta content="Aerosimo IT Consultancy" name="description">
     <!-- Meta Keyword -->
-    <meta content="2FA, Oracle, Authentication, JDBC, Java, PL/SQL, Tomcat, Maven, Jenkins, Bitbucket, Github, BPMN, UML"
+    <meta content="Aerosimo, Oracle, SOA, OSB, JDBC, Java, PL/SQL, Python, Integration Developer, Apache Tomcat, Maven, Jenkins, Bitbucket, Github, BPMN, UML"
           name="keywords">
     <!-- Meta Description -->
     <meta content="Aerosimo 0.0.1" name="generator">
@@ -52,47 +52,112 @@
     <meta content="Aerosimo" name="apple-mobile-web-app-title">
     <meta content="Aerosimo" name="application-name">
     <!-- Favicon-->
-    <link href="img/favicon.ico" rel="shortcut icon"/>
-    <link href="img/favicon.ico" rel="icon" type="image/x-icon">
-    <link href="img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
-    <link href="img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
-    <link href="img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
-    <link href="img/android-chrome-192x192.png" rel="android-chrome" sizes="192x192">
+    <link href="assets/images/favicon.ico" rel="shortcut icon"/>
+    <link href="assets/images/favicon.ico" rel="icon" type="image/x-icon">
+    <link href="assets/images/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="assets/images/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="assets/images/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+    <link href="assets/images/android-chrome-192x192.png" rel="android-chrome" sizes="192x192">
     <!-- CSS Files -->
-    <link href="css/auth.css" rel="stylesheet"/>
+    <link href="assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"/>
+    <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="assets/css/animate.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/sidebar-menu.css" rel="stylesheet"/>
+    <link href="assets/css/app-style.css" rel="stylesheet"/>
 </head>
-<body>
-<div class="login-box">
-    <h2>Account Registration</h2>
-    <form action="signup" method="post" id="signup">
-        <div class="user-box">
-            <input autocomplete="off" id="InputUsername" name="uname"
-                   pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$"
-                   placeholder="Username" required
-                   title="Alternatively referred to as an account name, login ID, nickname, and user ID, username or user name is the name given to a user on a computer or computer network."
-                   type="text">
-            <label>Username</label>
+
+<body class="bg-theme bg-theme5">
+
+<!-- start loader -->
+<div class="visible incoming" id="pageloader-overlay">
+    <div class="loader-wrapper-outer">
+        <div class="loader-wrapper-inner">
+            <div class="loader"></div>
         </div>
-        <div class="user-box">
-            <input autocomplete="off" id="InputEmailAddress" name="email"
-                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                   placeholder="Username" required
-                   title="Characters followed by an @ sign, followed by more characters. Must be in the following order: characters@characters.domain"
-                   type="text">
-            <label>Email Address</label>
-        </div>
-        <div class="user-box">
-            <input checked="" id="user-checkbox" type="checkbox" name="checkbox" value="Y" checked />
-            <label for="user-checkbox">Enable Multi-Factor Authentication</label>
-        </div>
-        <a href="#" onclick="document.getElementById('signup').submit();">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            Submit
-        </a>
-    </form>
+    </div>
 </div>
+<!-- end loader -->
+
+<!-- Start wrapper-->
+<div id="wrapper">
+
+    <div class="card-authentication2 mx-auto my-3">
+        <div class="card-group">
+            <div class="card mb-0">
+                <div class="bg-signup2"></div>
+                <div class="card-img-overlay rounded-left my-5">
+                    <h2 class="text-white">Aerosimo - 2FA</h2>
+                    <h1 class="text-white">Sign Up</h1>
+                    <p class="card-text text-white pt-3">To access this dashboard, please provide your unique sequence of characters that will be used to identify
+                        you as a user and allow access to this system.</p>
+                    <p class="card-text text-white pt-3">The email with further instructions will be sent to the submitted email address.
+                        If you don’t receive a message in 5 minutes, check the junk folder. If you are still experiencing any problems, contact support at support@aerosimo.com</p>
+                </div>
+            </div>
+
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="card-content p-3">
+                        <div class="text-center">
+                            <img alt="logo icon" src="assets/images/logo-icon.png">
+                        </div>
+                        <div class="card-title text-uppercase text-center py-3">Sign Up</div>
+                        <form method="post" action="signup">
+                            <div class="form-group">
+                                <div class="position-relative has-icon-left">
+                                    <label for="InputUserName" class="sr-only">Username</label>
+                                    <input type="text" id="InputUserName" class="form-control" pattern="^[a-zA-Z0-9]([._-](?![._-])|[a-zA-Z0-9]){3,18}[a-zA-Z0-9]$"
+                                           title="Alternatively referred to as an account name, login ID, nickname, and user ID, username or user name is the name given to a user on a computer or computer network."
+                                           placeholder="Username" name="uname" autocomplete="off" required>
+                                    <div class="form-control-position">
+                                        <i class="icon-user"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="position-relative has-icon-left">
+                                    <label for="InputEmailAddress" class="sr-only">Email Address</label>
+                                    <input type="text" id="InputEmailAddress" class="form-control"
+                                           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                           title="Characters followed by an @ sign, followed by more characters. Must be in the following order: characters@characters.domain"
+                                           placeholder="Email Address" name="email" autocomplete="off" required>
+                                    <div class="form-control-position">
+                                        <i class="icon-envelope-open"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="icheck-material-white">
+                                    <input checked="" id="user-checkbox" type="checkbox" name="checkbox" value="Y"/>
+                                    <label for="user-checkbox">Two Factor Authentication</label>
+                                </div>
+                            </div>
+                            <button class="btn btn-light btn-block waves-effect waves-light" type="submit">Sign Up</button>
+                            <div class="text-center pt-3">
+                                <hr>
+                                <p class="text-warning">Already have an account? <a href="signin.html">Sign In here</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--wrapper-->
+
+<!-- Bootstrap core JavaScript-->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/popper.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+
+<!-- sidebar-menu js -->
+<script src="assets/js/sidebar-menu.js"></script>
+
+<!-- Custom scripts -->
+<script src="assets/js/app-script.js"></script>
+
 </body>
 </html>
