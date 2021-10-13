@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      AuthAPI.java                                                    *
- * Created:   11/10/2021, 23:18                                               *
- * Modified:  11/10/2021, 23:18                                               *
+ * File:      TempPasswordMailTest.java                                       *
+ * Created:   13/10/2021, 15:44                                               *
+ * Modified:  13/10/2021, 15:44                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,56 +29,31 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.dao;
+package com.aerosimo.mail;
 
-import com.aerosimo.util.DBCon;
-import com.aerosimo.util.GeneratePassword;
 import com.aerosimo.util.Log;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Objects;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class AuthAPI {
+class TempPasswordMailTest {
 
-    public static String signup(String username, String emailAddress, String mfa) {
-        CallableStatement stmt;
-        stmt = null;
-        Connection con;
-        con = DBCon.getConnection();
+    @BeforeEach
+    void setUp() {
+        Log.info("Starting Temporary Password Email Test");
+    }
+
+    @AfterEach
+    void tearDown() {
+        Log.info("Temporary Password Email Test complete");
+    }
+
+
+    @Test
+    void sendPasswordMail() {
         String response;
-        response = "";
-        String sql;
-        String password;
-        sql = "{call auth_pkg.signup(?,?,?,?,?,?)}";
-        password = GeneratePassword.getPassword();
-        try {
-            stmt = con.prepareCall(sql);
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            stmt.setString(3, emailAddress);
-            stmt.setString(4, mfa);
-            stmt.registerOutParameter(5, Types.VARCHAR);
-            stmt.registerOutParameter(6, Types.VARCHAR);
-            stmt.execute();
-            if (Objects.equals(stmt.getString(6), "Success")) {
-                response = stmt.getString(6);
-                Log.info("Account Registration is successful for " + username + " the password " + password + " All this information will be emailed to this address " + emailAddress);
-            } else {
-                Log.error("Signup fails because CODE: " + stmt.getString(5) + " DETAILS: " + stmt.getString(6));
-            }
-        } catch (SQLException err) {
-            Log.warn("Registration attempt failed with the following details at AuthAPI.signup: DETAILS: " + err);
-        } finally {
-            try {
-                assert stmt != null;
-                stmt.close();
-            } catch (SQLException err) {
-                Log.fatal("Registration attempt failed with the following details at AuthAPI.signup: DETAILS: " + err);
-            }
-        }
-        return response;
+        response = TempPasswordMail.sendPasswordMail("ABCDEFGHIJKLMNOPQRSTUVWXYZ","babyboi@omisore.co.uk");
     }
 }

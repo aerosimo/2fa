@@ -31,11 +31,13 @@
 
 package com.aerosimo.mail;
 
+import com.aerosimo.util.Log;
 import com.aerosimo.util.SendEmail;
 
 public class TempPasswordMail {
     public static String sendPasswordMail(String generatedPassword, String emailAddress) {
         StringBuilder message;
+        String response;
         message = new StringBuilder("<div class=\"\">\n" +
                 "<div class=\"aHl\"></div>\n" +
                 "<div id=\":evp\" tabindex=\"-1\"></div>\n" +
@@ -81,6 +83,8 @@ public class TempPasswordMail {
                 "      </table>\n" +
                 "   </div>\n" +
                 "</div>");
-        return SendEmail.sendMail(emailAddress,"Authentication Temporary Password",message.toString(),null);
+        response = SendEmail.sendMail(emailAddress,"Authentication Temporary Password",message.toString(),null);
+        Log.info("Email response is: " + response);
+        return response;
     }
 }
