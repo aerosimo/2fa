@@ -49,9 +49,8 @@ class TempPasswordMailTest {
     }
 
 
-    //@Test
+    @Test
     @DisplayName("Unit Testing TempPasswordMail")
-    @Disabled
     void sendPasswordMail() {
         String response;
         response = TempPasswordMail.sendPasswordMail("ABCDEFGHIJKLMNOPQRSTUVWXYZ","babyboi@omisore.co.uk");
