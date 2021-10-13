@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      TempPasswordMailTest.java                                       *
- * Created:   13/10/2021, 15:44                                               *
- * Modified:  13/10/2021, 15:44                                               *
+ * File:      SendEmailTest.java                                              *
+ * Created:   13/10/2021, 19:26                                               *
+ * Modified:  13/10/2021, 19:26                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,34 +29,30 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.mail;
+package com.aerosimo.util;
 
-import com.aerosimo.util.Log;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class TempPasswordMailTest {
+class SendEmailTest {
 
     @BeforeEach
     void setUp() {
-        Log.info("Starting Temporary Password Email Test");
+        Log.info("Starting Utility Email Test");
     }
 
     @AfterEach
     void tearDown() {
-        Log.info("Temporary Password Email Test complete");
+        Log.info("Utility Email Test complete");
     }
 
-
-    //@Test
-    @Disabled
-    void sendPasswordMail() {
+    @Test
+    void sendMail() {
         String response;
-        response = TempPasswordMail.sendPasswordMail("ABCDEFGHIJKLMNOPQRSTUVWXYZ","babyboi@omisore.co.uk");
+        response = SendEmail.sendMail("support@aerosimo.com", "Test Email", "This is a test email. With thousands of potential renderings, spam filters on high alert, and the constant risk of broken links, email testing isn’t a nice-to-have—it’s a need-to-have.", null);
         assertNotNull(response, "Checking that the email is sent");
     }
 }
