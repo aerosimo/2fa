@@ -298,6 +298,6 @@ public class OTPMail {
                 "  </table>\n" +
                 "</body>\n" +
                 "</html>");
-        return SendEmail.sendMail(emailAddress,"Authentication Login Code",message.toString());
+        return SendEmail.sendMail(emailAddress,"Authentication Login Code",message.toString(),"");
     }
 }

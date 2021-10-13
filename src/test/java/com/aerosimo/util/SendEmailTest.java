@@ -56,7 +56,7 @@ class SendEmailTest {
     void sendMail() {
         String actual;
         String expected;
-        actual = SendEmail.sendMail("support@aerosimo.com", "Test Email", "This is a test email. With thousands of potential renderings, spam filters on high alert, and the constant risk of broken links, email testing isn’t a nice-to-have—it’s a need-to-have.");
+        actual = SendEmail.sendMail("support@aerosimo.com", "Test Email", "This is a test email. With thousands of potential renderings, spam filters on high alert, and the constant risk of broken links, email testing is not a nice-to-have but it is a need-to-have.","");
         assertNotNull(actual, "Checking that the email response is not null");
         expected = "Email Sent Successfully";
         Assertions.assertEquals(expected, actual, "This should match a the success message from the mail api");
