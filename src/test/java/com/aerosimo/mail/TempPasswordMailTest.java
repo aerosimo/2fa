@@ -36,7 +36,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class TempPasswordMailTest {
 
@@ -55,5 +55,6 @@ class TempPasswordMailTest {
     void sendPasswordMail() {
         String response;
         response = TempPasswordMail.sendPasswordMail("ABCDEFGHIJKLMNOPQRSTUVWXYZ","babyboi@omisore.co.uk");
+        assertNotNull(response, "Checking that the email is sent");
     }
 }
