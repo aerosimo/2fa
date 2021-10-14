@@ -263,7 +263,6 @@ AS
         i_temp IN auth_tbl.pword%TYPE,
         i_pword IN auth_tbl.pword%TYPE,
         o_email OUT auth_tbl.email%TYPE,
-        o_mfa OUT auth_tbl.mfa_enabled%TYPE,
         o_faultcode OUT NUMBER,
         o_faultmsg OUT VARCHAR2);
 
@@ -353,7 +352,6 @@ AS
         i_temp IN auth_tbl.pword%TYPE,
         i_pword IN auth_tbl.pword%TYPE,
         o_email OUT auth_tbl.email%TYPE,
-        o_mfa OUT auth_tbl.mfa_enabled%TYPE,
         o_faultcode OUT NUMBER,
         o_faultmsg OUT VARCHAR2)
     AS
@@ -363,17 +361,12 @@ AS
                 FROM auth_tbl
                 WHERE uname = i_uname
                   AND enc_dec.decrypt(pword) = i_temp),
-               email, mfa_enabled
-        INTO match_count, o_email, o_mfa
+               email
+        INTO match_count, o_email
         FROM auth_tbl
         WHERE uname = i_uname
           AND enc_dec.decrypt(pword) = i_temp;
-        IF (o_mfa = 'Y') THEN
-            UPDATE auth_tbl
-            SET pword = enc_dec.encrypt(i_pword),
-                status = 'Inactive'
-            WHERE uname = i_uname;
-        ELSIF (o_mfa = 'N') THEN
+        IF (match_count = 1) THEN
             UPDATE auth_tbl
             SET pword = enc_dec.encrypt(i_pword),
                 status = 'Active'

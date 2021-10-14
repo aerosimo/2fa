@@ -161,7 +161,7 @@ public class TempPasswordMail {
                 "                        <td background=\"https://inodeink.com/old/wp-content/uploads/sites/1/2018/04/Bottom-Bar.jpg\" background_size=\"cover\" align=\"center\" valign=\"top\" style=\"padding: 10px;\">\n" +
                 "                           <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\">\n" +
                 "                              <tr>\n" +
-                "                                 <td style=\"padding: 10px; text-align: right\">\n" +
+                "                                 <td style=\"padding: 10px; text-align: center\">\n" +
                 "                                    &#9742; &nbsp;+44 012 34567 899<br>\t&#9993;&nbsp;support@aerosimo.com<br>\n" +
                 "                                    &copy; Aerosimo Ltd. <script>document.write(new Date().getFullYear());</script><br>\n" +
                 "                                    <span style=\"font-size:10px;\">This is a confidential email and may also be privileged. If you are not the intended recipient, please inform us immediately.</span>\n" +

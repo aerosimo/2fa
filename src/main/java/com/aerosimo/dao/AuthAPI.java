@@ -96,10 +96,9 @@ public class AuthAPI {
             stmt.registerOutParameter(4, Types.VARCHAR);
             stmt.registerOutParameter(5, Types.VARCHAR);
             stmt.registerOutParameter(6, Types.VARCHAR);
-            stmt.registerOutParameter(7, Types.VARCHAR);
             stmt.execute();
-            if (Objects.equals(stmt.getString(7), "Success")) {
-                response = stmt.getString(7);
+            if (Objects.equals(stmt.getString(6), "Success")) {
+                response = stmt.getString(6);
                 PasswordUpdateMail.sendPasswordMail(username,stmt.getString(4));
             }
         } catch (SQLException err) {
@@ -111,6 +110,31 @@ public class AuthAPI {
                 stmt.close();
             } catch (SQLException err) {
                 Log.fatal("Temporary Password attempt failed with the following details at AuthAPI.tempass: DETAILS: " + err);
+            }
+        }
+        return response;
+    }
+
+    public static String signout (String username, String ipaddress){
+        response = "";
+        stmt = null;
+        sql = "{call auth_pkg.signout(?,?)}";
+        con = DBCon.getConnection();
+        try {
+            stmt = con.prepareCall(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, ipaddress);
+            stmt.execute();
+            response = "Success";
+        } catch (SQLException err) {
+            response = "Signout attempt failed at AuthAPI.signout";
+            Log.warn("Logout attempt failed with the following details at AuthAPI.signout: DETAILS: " + err);
+        } finally {
+            try {
+                assert stmt != null;
+                stmt.close();
+            } catch (SQLException err) {
+                Log.error("Logout attempt failed with the following details at AuthAPI.signout: DETAILS: " + err);
             }
         }
         return response;
