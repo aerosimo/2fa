@@ -257,6 +257,16 @@ AS
         o_faultcode OUT NUMBER,
         o_faultmsg OUT VARCHAR2);
 
+    -- reset user temporary password
+    PROCEDURE setPassword(
+        i_uname IN auth_tbl.uname%TYPE,
+        i_temp IN auth_tbl.pword%TYPE,
+        i_pword IN auth_tbl.pword%TYPE,
+        o_email OUT auth_tbl.email%TYPE,
+        o_mfa OUT auth_tbl.mfa_enabled%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2);
+
     -- generate verifier access code
     PROCEDURE setOTP(
         i_uname IN otp_tbl.uname%TYPE,
@@ -336,6 +346,53 @@ AS
             O_faultCode := SQLCODE;
             O_faultMsg := SUBSTR(SQLERRM, 1, 2000);
     END signup;
+
+    -- reset user temporary password
+    PROCEDURE setPassword(
+        i_uname IN auth_tbl.uname%TYPE,
+        i_temp IN auth_tbl.pword%TYPE,
+        i_pword IN auth_tbl.pword%TYPE,
+        o_email OUT auth_tbl.email%TYPE,
+        o_mfa OUT auth_tbl.mfa_enabled%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2)
+    AS
+        match_count NUMBER;
+    BEGIN
+        SELECT (SELECT COUNT(uname)
+                FROM auth_tbl
+                WHERE uname = i_uname
+                  AND enc_dec.decrypt(pword) = i_temp),
+               email, mfa_enabled
+        INTO match_count, o_email, o_mfa
+        FROM auth_tbl
+        WHERE uname = i_uname
+          AND enc_dec.decrypt(pword) = i_temp;
+        IF (o_mfa = 'Y') THEN
+            UPDATE auth_tbl
+            SET pword = enc_dec.encrypt(i_pword),
+                status = 'Inactive'
+            WHERE uname = i_uname;
+        ELSIF (o_mfa = 'N') THEN
+            UPDATE auth_tbl
+            SET pword = enc_dec.encrypt(i_pword),
+                status = 'Active'
+            WHERE uname = i_uname;
+        END IF;
+        o_faultCode := 0;
+        o_faultMsg := 'Success';
+        IF SQL%NOTFOUND THEN
+            RAISE NO_DATA_FOUND;
+        END IF;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            o_faultCode := -20001;
+            o_faultMsg := 'Wrong Username Or Password!';
+        WHEN OTHERS THEN
+            ROLLBACK;
+            O_faultcode := SQLCODE;
+            O_faultmsg := SUBSTR(SQLERRM, 1, 2000);
+    END setPassword;
 
     -- log user out of the session
     PROCEDURE signout(
