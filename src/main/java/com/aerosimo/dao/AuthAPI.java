@@ -31,6 +31,7 @@
 
 package com.aerosimo.dao;
 
+import com.aerosimo.mail.PasswordUpdateMail;
 import com.aerosimo.mail.TempPasswordMail;
 import com.aerosimo.util.DBCon;
 import com.aerosimo.util.GeneratePassword;
@@ -44,14 +45,15 @@ import java.util.Objects;
 
 public class AuthAPI {
 
+    static CallableStatement stmt;
+    static Connection con;
+    static String sql;
+    static String response;
+
     public static String signup(String username, String emailAddress, String mfa) {
-        CallableStatement stmt;
         stmt = null;
-        Connection con;
         con = DBCon.getConnection();
-        String response;
         response = "";
-        String sql;
         String password;
         sql = "{call auth_pkg.signup(?,?,?,?,?,?)}";
         password = GeneratePassword.getPassword();
@@ -67,10 +69,9 @@ public class AuthAPI {
             if (Objects.equals(stmt.getString(6), "Success")) {
                 response = stmt.getString(6);
                 TempPasswordMail.sendPasswordMail(password,emailAddress);
-            } else {
-                Log.error("Signup fails because CODE: " + stmt.getString(5) + " DETAILS: " + stmt.getString(6));
             }
         } catch (SQLException err) {
+            response = "Registration attempt failed at AuthAPI.signup";
             Log.warn("Registration attempt failed with the following details at AuthAPI.signup: DETAILS: " + err);
         } finally {
             try {
@@ -84,8 +85,34 @@ public class AuthAPI {
     }
 
     public static String tempass(String username, String tempword, String pword) {
-        String response;
-        response = username + tempword + pword;
+        stmt = null;
+        con = DBCon.getConnection();
+        sql = "{call auth_pkg.setPassword(?,?,?,?,?,?,?)}";
+        try{
+            stmt = con.prepareCall(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, tempword);
+            stmt.setString(3, pword);
+            stmt.registerOutParameter(4, Types.VARCHAR);
+            stmt.registerOutParameter(5, Types.VARCHAR);
+            stmt.registerOutParameter(6, Types.VARCHAR);
+            stmt.registerOutParameter(7, Types.VARCHAR);
+            stmt.execute();
+            if (Objects.equals(stmt.getString(7), "Success")) {
+                response = stmt.getString(7);
+                PasswordUpdateMail.sendPasswordMail(username,stmt.getString(4));
+            }
+        } catch (SQLException err) {
+            response = "Temporary Password attempt failed at AuthAPI.tempass";
+            Log.warn("Temporary Password attempt failed with the following details at AuthAPI.tempass: DETAILS: " + err);
+        } finally {
+            try {
+                assert stmt != null;
+                stmt.close();
+            } catch (SQLException err) {
+                Log.fatal("Temporary Password attempt failed with the following details at AuthAPI.tempass: DETAILS: " + err);
+            }
+        }
         return response;
     }
 }
