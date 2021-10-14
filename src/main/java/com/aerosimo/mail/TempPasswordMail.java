@@ -38,51 +38,155 @@ public class TempPasswordMail {
     public static String sendPasswordMail(String generatedPassword, String emailAddress) {
         StringBuilder message;
         String response;
-        message = new StringBuilder("<div class=\"\">\n" +
-                "<div class=\"aHl\"></div>\n" +
-                "<div id=\":evp\" tabindex=\"-1\"></div>\n" +
-                "<div id=\":ex3\" class=\"ii gt\">\n" +
-                "<div id=\":ex2\" class=\"a3s aXjCH msg-2027985233961450485\">\n" +
-                "   <div style=\"height:100%;margin:0;background-color:#f2f4f6;color:#51545e;font-family:Lato,Tahoma,sans-serif;width:100%!important\">\n" +
-                "      <table style=\"width:100%;margin:0;padding:10px 0 0 0;background-color:#f2f4f6\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n" +
-                "         <tbody>\n" +
-                "            <tr>\n" +
-                "               <td style=\"word-break:break-word;font-family:Lato,Tahoma,sans-serif;font-size:16px\" align=\"center\">\n" +
-                "                  <table style=\"width:100%;margin:0;padding:0\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n" +
-                "                     <tbody>\n" +
-                "                        <tr>\n" +
-                "                           <td style=\"word-break:break-word;font-family:Lato,Tahoma,sans-serif;font-size:16px;width:100%;margin:0;padding:0\" width=\"570\" cellpadding=\"0\" cellspacing=\"0\">\n" +
-                "                              <table class=\"m_-2027985233961450485email-body_inner\" style=\"width:570px;margin:0 auto;padding:0;background-color:#fff\" align=\"center\" width=\"570\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\">\n" +
-                "                                 <tbody>\n" +
-                "                                    <tr>\n" +
-                "                                       <td style=\"word-break:break-word;font-family:Lato,Tahoma,sans-serif;font-size:16px;padding:20px 45px\">\n" +
-                "                                          <div>\n" +
-                "                                             <h1 style=\"margin-top:0;color:#333;font-size:24px;font-weight:bold;text-align:center\">\n" +
-                "                                                Thanks for signing up for Aerosimo Two Factor Authentication Account!\n" +
-                "                                             </h1>\n" +
-                "                                             <p style=\"color:#51545e;margin:0.4em 0 1.1875em;font-size:16px;line-height:1.625\">\n" +
-                "                                                We're happy you're here. This is to verify your email by sending your temporary password as seen below:\n" +
-                "                                             </p>\n" +
-                "                                             <p style=\"color:blue;font-size:20px;text-align:center\">");
-        message.append(generatedPassword);
-        message.append("</p>\n" +
-                "                                             <p style=\"color:#51545e;margin:0.4em 0 1.1875em;font-size:16px;line-height:1.625\">Use the above password to reset your password:</p>\n" +
-                "                                          </div>\n" +
-                "                                       </td>\n" +
-                "                                    </tr>\n" +
-                "                                 </tbody>\n" +
-                "                              </table>\n" +
-                "                           </td>\n" +
-                "                        </tr>\n" +
-                "                        <tr>\n" +
-                "                     </tbody>\n" +
+        message = new StringBuilder("<!doctype html>\n" +
+                "<html>\n" +
+                "   <head>\n" +
+                "      <meta charset=\"UTF-8\">\n" +
+                "      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "      <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "      <style type=\"text/css\">\n" +
+                "         html,  body {\n" +
+                "         margin: 0 !important;\n" +
+                "         padding: 0 !important;\n" +
+                "         height: 100% !important;\n" +
+                "         width: 100% !important;\n" +
+                "         }\n" +
+                "         * {\n" +
+                "         -ms-text-size-adjust: 100%;\n" +
+                "         -webkit-text-size-adjust: 100%;\n" +
+                "         }\n" +
+                "         .ExternalClass {\n" +
+                "         width: 100%;\n" +
+                "         }\n" +
+                "         div[style*=\"margin: 16px 0\"] {\n" +
+                "         margin: 0 !important;\n" +
+                "         }\n" +
+                "         table,  td {\n" +
+                "         mso-table-lspace: 0pt !important;\n" +
+                "         mso-table-rspace: 0pt !important;\n" +
+                "         }\n" +
+                "         table {\n" +
+                "         border-spacing: 0 !important;\n" +
+                "         border-collapse: collapse !important;\n" +
+                "         table-layout: fixed !important;\n" +
+                "         margin: 0 auto !important;\n" +
+                "         }\n" +
+                "         table table table {\n" +
+                "         table-layout: auto;\n" +
+                "         }\n" +
+                "         img {\n" +
+                "         -ms-interpolation-mode: bicubic;\n" +
+                "         }\n" +
+                "         .yshortcuts a {\n" +
+                "         border-bottom: none !important;\n" +
+                "         }\n" +
+                "         a[x-apple-data-detectors] {\n" +
+                "         color: inherit !important;\n" +
+                "         }\n" +
+                "         @media (max-width: 800px){\n" +
+                "         }\n" +
+                "      </style>\n" +
+                "      <style type=\"text/css\">\n" +
+                "         .button-td,\n" +
+                "         .button-a {\n" +
+                "         transition: all 100ms ease-in;\n" +
+                "         }\n" +
+                "         .button-td:hover,\n" +
+                "         .button-a:hover {\n" +
+                "         background: #555555 !important;\n" +
+                "         border-color: #555555 !important;\n" +
+                "         }\n" +
+                "         @media screen and (max-width : 480px ){\n" +
+                "         .email-container {\n" +
+                "         width: 100% !important;\n" +
+                "         }\n" +
+                "         .fluid,\n" +
+                "         .fluid-centered {\n" +
+                "         max-width: 100% !important;\n" +
+                "         height: auto !important;\n" +
+                "         margin-left: auto !important;\n" +
+                "         margin-right: auto !important;\n" +
+                "         }\n" +
+                "         .fluid-centered {\n" +
+                "         margin-left: auto !important;\n" +
+                "         margin-right: auto !important;\n" +
+                "         }\n" +
+                "         .stack-column,\n" +
+                "         .stack-column-center {\n" +
+                "         display: block !important;\n" +
+                "         width: 100% !important;\n" +
+                "         max-width: 100% !important;\n" +
+                "         direction: ltr !important;\n" +
+                "         }\n" +
+                "         .stack-column-center {\n" +
+                "         text-align: center !important;\n" +
+                "         }\n" +
+                "         .center-on-narrow {\n" +
+                "         text-align: center !important;\n" +
+                "         display: block !important;\n" +
+                "         margin-left: auto !important;\n" +
+                "         margin-right: auto !important;\n" +
+                "         float: none !important;\n" +
+                "         }\n" +
+                "         table.center-on-narrow {\n" +
+                "         display: inline-block !important;\n" +
+                "         }\n" +
+                "         }\n" +
+                "      </style>\n" +
+                "   </head>\n" +
+                "   <body bgcolor=\"#e0e0e0\" width=\"100%\" style=\"margin: 0;\" yahoo=\"yahoo\">\n" +
+                "      <table bgcolor=\"#e0e0e0\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" height=\"100%\" width=\"100%\" style=\"border-collapse:collapse;\">\n" +
+                "         <tr>\n" +
+                "            <td>\n" +
+                "               <center style=\"width: 100%;\">\n" +
+                "                  <table align=\"center\" width=\"600\" class=\"email-container\">\n" +
+                "                     <img src=\"http://inodeink.com/iknow/wp-content/uploads/sites/2/2019/05/AdobeStock_96460260-e1557941197369.jpeg\" width=\"600\" height=\"292\" alt=\"Welcome Aboard\" border=\"0\">\n" +
+                "                     <tr>\n" +
+                "                        <td style=\"padding: 0px 0; text-align: center\"></td>\n" +
+                "                     </tr>\n" +
                 "                  </table>\n" +
-                "               </td>\n" +
-                "            </tr>\n" +
-                "         </tbody>\n" +
+                "                  <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" align=\"center\" bgcolor=\"#ffffff\" width=\"600\" class=\"email-container\">\n" +
+                "                     <tr>\n" +
+                "                        <td style=\"padding: 20px; text-align: left; font-family: georgia; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;\">\n" +
+                "                           <p>Welcome to Aerosimo</p>\n" +
+                "                           <p>We're really excited that you've joined thousands of other customers who are enjoying this service!<br><br> You're just one click away from login in to your account. <br>Please use the generated temporary password below to complete signing to your account.</p>\n" +
+                "                           <p><strong>");
+        message.append(generatedPassword);
+        message.append("</strong></p>\n" +
+                "                           <p>Thank you so much for compliance, </p>\n" +
+                "                           <p>Aerosimo Support Team</p>\n" +
+                "                        </td>\n" +
+                "                     </tr>\n" +
+                "                     <tr>\n" +
+                "                        <td background=\"https://inodeink.com/old/wp-content/uploads/sites/1/2018/04/Bottom-Bar.jpg\" background_size=\"cover\" align=\"center\" valign=\"top\" style=\"padding: 10px;\">\n" +
+                "                           <table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\">\n" +
+                "                              <tr>\n" +
+                "                                 <td style=\"padding: 10px; text-align: right\">\n" +
+                "                                    &#9742; &nbsp;+44 012 34567 899<br>\t&#9993;&nbsp;support@aerosimo.com<br>\n" +
+                "                                    &copy; Aerosimo Ltd. <script>document.write(new Date().getFullYear());</script><br>\n" +
+                "                                    <span style=\"font-size:10px;\">This is a confidential email and may also be privileged. If you are not the intended recipient, please inform us immediately.</span>\n" +
+                "                                 </td>\n" +
+                "                              </tr>\n" +
+                "                           </table>\n" +
+                "                     <tr></td>\n" +
+                "                     </tr>\n" +
+                "                  </table>\n" +
+                "            </td>\n" +
+                "         </tr>\n" +
                 "      </table>\n" +
-                "   </div>\n" +
-                "</div>");
+                "      </td>\n" +
+                "      </tr>\n" +
+                "      <tr>\n" +
+                "      <td dir=\"rtl\" align=\"center\" valign=\"top\" width=\"100%\" style=\"padding: 10px;\"><table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n" +
+                "      </tr>\n" +
+                "      </table></td>\n" +
+                "      </tr>\n" +
+                "      </table>\n" +
+                "      </center></td>\n" +
+                "      </tr>\n" +
+                "      </table>\n" +
+                "   </body>\n" +
+                "</html>");
         response = SendEmail.sendMail(emailAddress,"Authentication Temporary Password",message.toString(),"");
         Log.info("Email response is: " + response);
         return response;

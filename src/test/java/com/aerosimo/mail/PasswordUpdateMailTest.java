@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      Temporary.java                                                  *
- * Created:   13/10/2021, 22:52                                               *
- * Modified:  13/10/2021, 22:52                                               *
+ * File:      PasswordUpdateMailTest.java                                     *
+ * Created:   14/10/2021, 13:30                                               *
+ * Modified:  14/10/2021, 13:30                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,34 +29,34 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.monitor;
+package com.aerosimo.mail;
 
-import com.aerosimo.dao.AuthAPI;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.aerosimo.util.Log;
+import org.junit.jupiter.api.*;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.*;
 
-@WebServlet(name = "TemporaryServlet", description = "A simple servlet to reset the temporary password", urlPatterns = "/temporary")
-public class Temporary extends HttpServlet {
+class PasswordUpdateMailTest {
 
-        @Override
-        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-            resp.setContentType("text/html; charset=UTF-8");
-            String uname;
-            String tpword;
-            String pword;
-            String response;
-            uname = req.getParameter("uname");
-            tpword = req.getParameter("tpword");
-            pword = req.getParameter("pword");
-            response = AuthAPI.tempass(uname, tpword, pword);
-            if (response.equals("Success")) {
-                resp.sendRedirect("signin.html");
-            } else {
-                resp.sendRedirect("tempass.html");
-            }
-        }
+    @BeforeEach
+    void setUp() {
+        Log.info("Starting Password Update Email Test");
+    }
+
+    @AfterEach
+    void tearDown() {
+        Log.info("Password Update Email Test complete");
+    }
+
+
+    @Test
+    @DisplayName("Unit Testing PasswordUpdateMail")
+    void sendPasswordMail() {
+        String actual;
+        String expected;
+        actual = PasswordUpdateMail.sendPasswordMail("Support","support@aerosimo.com");
+        assertNotNull(actual, "Checking that the email response is not null");
+        expected = "Email Sent Successfully";
+        Assertions.assertEquals(expected, actual, "This should match a the success message from the mail api");
+    }
 }
