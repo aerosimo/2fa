@@ -233,6 +233,7 @@ AS
         i_inet IN audit_tbl.inet%TYPE,
         i_authCode IN otp_tbl.authCode%TYPE,
         o_email OUT auth_tbl.email%TYPE,
+        o_mfa OUT auth_tbl.mfa_enabled%TYPE,
         o_authCode OUT otp_tbl.authCode%TYPE,
         o_expire OUT otp_tbl.lapse%TYPE,
         o_faultcode OUT NUMBER,
@@ -396,6 +397,46 @@ AS
         setAudit(i_uname, i_inet, 'logout');
     END signout;
 
+    -- authenticate user
+    PROCEDURE signin(
+        i_uname IN auth_tbl.uname%TYPE,
+        i_pword IN auth_tbl.pword%TYPE,
+        i_inet IN audit_tbl.inet%TYPE,
+        o_email OUT auth_tbl.email%TYPE,
+        o_mfa OUT auth_tbl.mfa_enabled%TYPE,
+        o_faultcode OUT NUMBER,
+        o_faultmsg OUT VARCHAR2)
+    AS
+        match_count NUMBER;
+        x_status    VARCHAR2(20 byte);
+    BEGIN
+        SELECT (SELECT COUNT(uname)
+                FROM auth_tbl
+                WHERE uname = i_uname
+                  AND enc_dec.decrypt(pword) = i_pword),
+               email, status, mfa_enabled
+        INTO match_count, o_email, x_status, o_mfa
+        FROM auth_tbl
+        WHERE uname = i_uname
+          AND enc_dec.decrypt(pword) = i_pword;
+        IF (match_count = 1 AND x_status ='Active') THEN
+            setAudit(i_uname, i_inet, 'login');
+            o_faultcode := 0;
+            o_faultmsg := 'Success';
+        END IF;
+        IF SQL%NOTFOUND THEN
+           RAISE NO_DATA_FOUND;
+        END IF;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            o_faultCode := -20001;
+            o_faultMsg := 'Wrong Username Or Password!';
+        WHEN OTHERS THEN
+            ROLLBACK;
+            O_faultcode := SQLCODE;
+            O_faultmsg := SUBSTR(SQLERRM, 1, 2000);
+    END signin;
+
     -- generate verifier access code
     PROCEDURE setOTP(
         i_uname IN otp_tbl.uname%TYPE,
@@ -440,53 +481,6 @@ AS
         WHEN OTHERS THEN
             ROLLBACK;
     END setAudit;
-
-    -- authenticate user
-    PROCEDURE signin(
-        i_uname IN auth_tbl.uname%TYPE,
-        i_pword IN auth_tbl.pword%TYPE,
-        i_inet IN audit_tbl.inet%TYPE,
-        i_authCode IN otp_tbl.authCode%TYPE,
-        o_email OUT auth_tbl.email%TYPE,
-        o_authCode OUT otp_tbl.authCode%TYPE,
-        o_expire OUT otp_tbl.lapse%TYPE,
-        o_faultcode OUT NUMBER,
-        o_faultmsg OUT VARCHAR2)
-    AS
-        match_count NUMBER;
-        x_status    VARCHAR2(20 byte);
-    BEGIN
-        SELECT (SELECT COUNT(uname)
-                FROM auth_tbl
-                WHERE uname = i_uname
-                  AND enc_dec.decrypt(pword) = i_pword),
-               email, status
-        INTO match_count, o_email, x_status
-        FROM auth_tbl
-        WHERE uname = i_uname
-          AND enc_dec.decrypt(pword) = i_pword;
-        IF (match_count = 1 AND x_status ='Active') THEN
-            setAudit(i_uname, i_inet, 'login');
-            setOTP(i_uname, i_authCode, o_authCode, o_expire);
-            o_faultcode := 0;
-            o_faultmsg := 'Success';
-        ELSIF (match_count = 1 AND x_status ='Temp') THEN
-            o_faultcode := 0;
-            o_faultmsg := 'Temporary';
-        ELSE
-            IF SQL%NOTFOUND THEN
-                RAISE NO_DATA_FOUND;
-            END IF;
-        END IF;
-    EXCEPTION
-        WHEN NO_DATA_FOUND THEN
-            o_faultCode := -20001;
-            o_faultMsg := 'Wrong Username Or Password!';
-        WHEN OTHERS THEN
-            ROLLBACK;
-            O_faultcode := SQLCODE;
-            O_faultmsg := SUBSTR(SQLERRM, 1, 2000);
-    END signin;
 
     -- check the access code is valid
     PROCEDURE checkOTP(

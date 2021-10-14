@@ -31,9 +31,12 @@
 
 package com.aerosimo.dao;
 
+import com.aerosimo.bean.SigninMsg;
+import com.aerosimo.mail.OTPMail;
 import com.aerosimo.mail.PasswordUpdateMail;
 import com.aerosimo.mail.TempPasswordMail;
 import com.aerosimo.util.DBCon;
+import com.aerosimo.util.GenerateOTP;
 import com.aerosimo.util.GeneratePassword;
 import com.aerosimo.util.Log;
 
@@ -41,6 +44,8 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class AuthAPI {
@@ -135,6 +140,56 @@ public class AuthAPI {
                 stmt.close();
             } catch (SQLException err) {
                 Log.error("Logout attempt failed with the following details at AuthAPI.signout: DETAILS: " + err);
+            }
+        }
+        return response;
+    }
+
+    public static String signin(String username, String password, String ipaddress) {
+        response = "";
+        String otp, email;
+        stmt = null;
+        sql = "{call auth_pkg.signin(?,?,?,?,?,?,?)}";
+        con = DBCon.getConnection();
+        try {
+            stmt = con.prepareCall(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            stmt.setString(3, ipaddress);
+            stmt.registerOutParameter(4, Types.VARCHAR);
+            stmt.registerOutParameter(5, Types.VARCHAR);
+            stmt.registerOutParameter(6, Types.VARCHAR);
+            stmt.registerOutParameter(7, Types.VARCHAR);
+            stmt.execute();
+            if (Objects.equals(stmt.getString(5),"Y")){
+                response = "MFA";
+                otp = GenerateOTP.getOTP();
+                email = stmt.getString(4);
+                sql = "{call auth_pkg.setOTP(?,?,?,?)}";
+                try {
+                    stmt = con.prepareCall(sql);
+                    stmt.setString(1, username);
+                    stmt.setString(2, otp);
+                    stmt.registerOutParameter(3, Types.VARCHAR);
+                    stmt.registerOutParameter(4, Types.VARCHAR);
+                    stmt.execute();
+                    OTPMail.sendOTP(username, otp, email);
+                } catch (SQLException err){
+                    Log.error("Login attempt failed with the following details at AuthAPI.signin: DETAILS: " + err);
+                }
+            } else if (Objects.equals(stmt.getString(5),"N")){
+                response = "Success";
+            } else {
+                response = "Wrong Username Or Password!";
+            }
+        } catch (SQLException err) {
+            Log.error("Login attempt failed with the following details at AuthAPI.signin: DETAILS: " + err);
+        } finally {
+            try {
+                assert stmt != null;
+                stmt.close();
+            } catch (SQLException err) {
+                Log.error("Login attempt failed with the following details at AuthAPI.signin: DETAILS: " + err);
             }
         }
         return response;
