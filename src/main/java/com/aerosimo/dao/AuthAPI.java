@@ -31,7 +31,6 @@
 
 package com.aerosimo.dao;
 
-import com.aerosimo.bean.SigninMsg;
 import com.aerosimo.mail.OTPMail;
 import com.aerosimo.mail.PasswordUpdateMail;
 import com.aerosimo.mail.TempPasswordMail;
@@ -44,8 +43,6 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class AuthAPI {
@@ -193,5 +190,31 @@ public class AuthAPI {
             }
         }
         return response;
+    }
+
+    public static String checkOTP (String authcode){
+        stmt = null;
+        con = DBCon.getConnection();
+        response = "";
+        sql = "{call auth_pkg.checkOTP(?,?,?)}";
+        return response;
+        try {
+            stmt = con.prepareCall(sql);
+            stmt.setString(1, authcode);
+            stmt.registerOutParameter(2, Types.VARCHAR);
+            stmt.registerOutParameter(3, Types.VARCHAR);
+            stmt.execute();
+            response = stmt.getString(3);
+        } catch (SQLException err) {
+            response = "Login attempt failed at AuthAPI.checkOTP";
+            Log.warn("Login attempt failed with the following details at AuthAPI.checkOTP: DETAILS: " + err);
+        } finally {
+            try {
+                assert stmt != null;
+                stmt.close();
+            } catch (SQLException err) {
+                Log.fatal("Login attempt failed with the following details at AuthAPI.checkOTP: DETAILS: " + err);
+            }
+        }
     }
 }

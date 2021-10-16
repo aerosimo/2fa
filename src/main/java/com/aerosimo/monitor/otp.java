@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      SigninMsg.java                                                  *
- * Created:   14/10/2021, 20:46                                               *
- * Modified:  14/10/2021, 20:46                                               *
+ * File:      otp.java                                                        *
+ * Created:   05/10/2021, 18:19                                               *
+ * Modified:  05/10/2021, 18:19                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -29,68 +29,28 @@
  *                                                                            *
  ******************************************************************************/
 
-package com.aerosimo.bean;
+package com.aerosimo.monitor;
 
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlType;
+import com.aerosimo.dao.AuthAPI;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@XmlRootElement(name = "SigninResponse")
-@XmlType(propOrder = {"emailAddress", "mfaStatus", "responseCode", "responseDetail"})
-public class SigninMsg {
-    private String emailAddress;
-    private String mfaStatus;
-    private String responseCode;
-    private String responseDetail;
+import java.io.IOException;
 
-    public SigninMsg() {
-    }
-
-    public SigninMsg(String emailAddress, String mfaStatus, String responseCode, String responseDetail) {
-        this.emailAddress = emailAddress;
-        this.mfaStatus = mfaStatus;
-        this.responseCode = responseCode;
-        this.responseDetail = responseDetail;
-    }
-
-    public String getEmailAddress() {
-        return emailAddress;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    public String getMfaStatus() {
-        return mfaStatus;
-    }
-
-    public void setMfaStatus(String mfaStatus) {
-        this.mfaStatus = mfaStatus;
-    }
-
-    public String getResponseCode() {
-        return responseCode;
-    }
-
-    public void setResponseCode(String responseCode) {
-        this.responseCode = responseCode;
-    }
-
-    public String getResponseDetail() {
-        return responseDetail;
-    }
-
-    public void setResponseDetail(String responseDetail) {
-        this.responseDetail = responseDetail;
-    }
+@WebServlet(name = "OTPServlet", description = "A simple otp servlet to validate the user credentials", urlPatterns = "/otp")
+public class otp extends HttpServlet {
 
     @Override
-    public String toString() {
-        return "SigninMsg{" +
-                "emailAddress='" + emailAddress + '\'' +
-                ", mfaStatus='" + mfaStatus + '\'' +
-                ", responseCode='" + responseCode + '\'' +
-                ", responseDetail='" + responseDetail + '\'' +
-                '}';
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        String authCode;
+        String response;
+        authCode = req.getParameter("otp");
+        response = AuthAPI.checkOTP(authCode);
+        if (response == "Success"){
+            resp.sendRedirect("index.jsp");
+        }
     }
 }

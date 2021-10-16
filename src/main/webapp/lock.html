@@ -1,12 +1,12 @@
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  ~ This piece of work is to enhance ominet project functionality.            ~
+  ~ This piece of work is to enhance 2FA project functionality.               ~
   ~                                                                           ~
   ~ Author:    Aerosimo                                                       ~
   ~ File:      lock.html                                                      ~
   ~ Created:   02/06/2021, 19:32                                              ~
-  ~ Modified:  31/08/2021, 00:07                                              ~
+  ~ Modified:  16/10/2021, 20:21                                              ~
   ~                                                                           ~
-  ~ Copyright (c) 2021.  Aerosimo Ltd                                         ~
+  ~ Copyright (c)  2021.  Aerosimo Ltd                                        ~
   ~                                                                           ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a   ~
   ~ copy of this software and associated documentation files (the "Software"),~
@@ -90,14 +90,14 @@
             </div>
         </div>
         <div class="card-body">
-            <h4 class="text-center mt-5 py-2">Aerosimo Ltd</h4>
-            <form class="mt-3 mb-1">
+            <h4 class="text-center mt-5 py-2">Aerosimo - 2FA</h4>
+            <form class="mt-3 mb-1" method="post" action="signup">
                 <div class="form-group">
                     <div class="position-relative has-icon-left">
-                        <label for="InputPassword" class="sr-only">Password</label>
-                        <input type="password" id="InputPassword" class="form-control"
-                               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
-                               placeholder="Password" name="pword" minlength="8" autocomplete="off" required>
+                        <label for="InputOTP" class="sr-only">OTP Code</label>
+                        <input type="password" id="InputOTP" class="form-control"
+                               pattern="^[0-9]{6,6}" title="Treat your OTP code as confidential. Sharing it with anyone gives them full access to your account. Aerosimo never calls to verify your OTP."
+                               placeholder="OTP Code" name="otp" minlength="6" autocomplete="off" required>
                         <div class="form-control-position">
                             <i class="icon-lock"></i>
                         </div>
