@@ -216,5 +216,6 @@ public class AuthAPI {
                 Log.fatal("Login attempt failed with the following details at AuthAPI.checkOTP: DETAILS: " + err);
             }
         }
+        return response;
     }
 }
