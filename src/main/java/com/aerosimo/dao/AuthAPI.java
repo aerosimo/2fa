@@ -197,7 +197,6 @@ public class AuthAPI {
         con = DBCon.getConnection();
         response = "";
         sql = "{call auth_pkg.checkOTP(?,?,?)}";
-        return response;
         try {
             stmt = con.prepareCall(sql);
             stmt.setString(1, authcode);
