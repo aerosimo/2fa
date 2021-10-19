@@ -2,9 +2,9 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      OTP.java                                                        *
- * Created:   05/10/2021, 18:19                                               *
- * Modified:  05/10/2021, 18:19                                               *
+ * File:      Recover.java                                                    *
+ * Created:   19/10/2021, 02:56                                               *
+ * Modified:  19/10/2021, 02:56                                               *
  *                                                                            *
  * Copyright (c)  2021.  Aerosimo Ltd                                         *
  *                                                                            *
@@ -32,6 +32,7 @@
 package com.aerosimo.monitor;
 
 import com.aerosimo.dao.AuthAPI;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,18 +40,22 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "OTPServlet", description = "A simple OTP servlet to validate the user credentials", urlPatterns = "/OTP")
-public class OTP extends HttpServlet {
+@WebServlet(name = "RecoverPasswordServlet", description = "A simple servlet to recover password for the application user", urlPatterns = "/recover")
+public class Recover extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html; charset=UTF-8");
-        String authCode;
+        String authcode;
+        String pword;
+        authcode = req.getParameter("authcode");
+        pword = req.getParameter("pword");
         String response;
-        authCode = req.getParameter("OTP");
-        response = AuthAPI.checkOTP(authCode);
-        if (response == "Success"){
-            resp.sendRedirect("index.jsp");
+        response = AuthAPI.resetPassword(authcode, pword);
+        if (response == "Success") {
+            resp.sendRedirect("signin.html");
+        } else {
+            resp.sendRedirect("recover.html");
         }
     }
 }

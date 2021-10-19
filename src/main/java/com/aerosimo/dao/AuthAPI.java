@@ -217,4 +217,70 @@ public class AuthAPI {
         }
         return response;
     }
+
+    public static String forgotPassword (String emailAddress) {
+        stmt = null;
+        con = DBCon.getConnection();
+        response = "";
+        sql = "{call auth_pkg.forgotPassword(?,?,?,?,?,?,?)}";
+        String otp;
+        otp = GenerateOTP.getOTP();
+        try{
+            stmt = con.prepareCall(sql);
+            stmt.setString(1, emailAddress);
+            stmt.setString(2, otp);
+            stmt.registerOutParameter(3, Types.VARCHAR);
+            stmt.registerOutParameter(4, Types.VARCHAR);
+            stmt.registerOutParameter(5, Types.VARCHAR);
+            stmt.registerOutParameter(6, Types.VARCHAR);
+            stmt.registerOutParameter(7, Types.VARCHAR);
+            stmt.execute();
+            OTPMail.sendOTP(stmt.getString(3), stmt.getString(4), emailAddress);
+            response = stmt.getString(7);
+        }catch(SQLException err){
+            Log.error("Forgot Password attempt failed with the following details at AuthAPI.forgotPassword: DETAILS: " + err);
+            response = "Email address is not valid!";
+        } finally{
+            try {
+                assert stmt != null;
+                stmt.close();
+            } catch (SQLException err) {
+                Log.error("Forgot Password attempt failed with the following details at AuthAPI.forgotPassword: DETAILS: " + err);
+            }
+        }
+        return response;
+    }
+
+    public static String resetPassword (String accessCode, String password) {
+
+        stmt = null;
+        con = DBCon.getConnection();
+        response = "";
+        sql = "{call auth_pkg.resetPassword(?,?,?,?,?,?)}";
+        try{
+            stmt = con.prepareCall(sql);
+            stmt.setString(1, accessCode);
+            stmt.setString(2, password);
+            stmt.registerOutParameter(3, Types.VARCHAR);
+            stmt.registerOutParameter(4, Types.VARCHAR);
+            stmt.registerOutParameter(5, Types.VARCHAR);
+            stmt.registerOutParameter(6, Types.VARCHAR);
+            stmt.execute();
+            response = stmt.getString(6);
+            if (Objects.equals(stmt.getString(6), "Success")) {
+                PasswordUpdateMail.sendPasswordMail(stmt.getString(3),stmt.getString(4));
+            }
+        }catch(SQLException err){
+            Log.error("Forgot Password attempt failed with the following details at AuthAPI.forgotPassword: DETAILS: " + err);
+            response = "Access Code is not valid!";
+        } finally{
+            try {
+                assert stmt != null;
+                stmt.close();
+            } catch (SQLException err) {
+                Log.error("Reset Password attempt failed with the following details at AuthAPI.resetPassword: DETAILS: " + err);
+            }
+        }
+        return response;
+    }
 }

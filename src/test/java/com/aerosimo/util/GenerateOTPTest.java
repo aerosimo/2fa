@@ -53,6 +53,6 @@ class GenerateOTPTest {
     @Test
     @DisplayName("Checking the OTP is generated")
     void getOTP() {
-        assertNotNull(GenerateOTP.getOTP(), "Checking that the otp is generated");
+        assertNotNull(GenerateOTP.getOTP(), "Checking that the OTP is generated");
     }
 }

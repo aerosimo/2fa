@@ -1,0 +1,151 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ This piece of work is to enhance ominet project functionality.            ~
+  ~                                                                           ~
+  ~ Author:    Aerosimo                                                       ~
+  ~ File:      forgot.html                                                    ~
+  ~ Created:   05/06/2021, 03:13                                              ~
+  ~ Modified:  31/08/2021, 00:07                                              ~
+  ~                                                                           ~
+  ~ Copyright (c) 2021.  Aerosimo Ltd                                         ~
+  ~                                                                           ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a   ~
+  ~ copy of this software and associated documentation files (the "Software"),~
+  ~ to deal in the Software without restriction, including without limitation ~
+  ~ the rights to use, copy, modify, merge, publish, distribute, sublicense,  ~
+  ~ and/or sell copies of the Software, and to permit persons to whom the     ~
+  ~ Software is furnished to do so, subject to the following conditions:      ~
+  ~                                                                           ~
+  ~ The above copyright notice and this permission notice shall be included   ~
+  ~ in all copies or substantial portions of the Software.                    ~
+  ~                                                                           ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,           ~
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES           ~
+  ~ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                  ~
+  ~ NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT                ~
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,              ~
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING              ~
+  ~ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE                ~
+  ~ OR OTHER DEALINGS IN THE SOFTWARE.                                        ~
+  ~                                                                           ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <!-- Title -->
+    <title>Reset Password | Ominet Web Application | Aerosimo Ltd</title>
+    <!-- Mobile Specific Meta -->
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <!-- Author Meta -->
+    <meta content="Elijah Omisore" name="author">
+    <!-- Meta Description -->
+    <meta content="Aerosimo IT Consultancy" name="description">
+    <!-- Meta Keyword -->
+    <meta content="Aerosimo, Oracle, SOA, OSB, JDBC, Java, PL/SQL, Python, Integration Developer, Apache Tomcat, Maven, Jenkins, Bitbucket, Github, BPMN, UML"
+          name="keywords">
+    <!-- Meta Description -->
+    <meta content="Aerosimo 0.0.1" name="generator">
+    <!-- Meta Browser compatibility -->
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="Aerosimo" name="apple-mobile-web-app-title">
+    <meta content="Aerosimo" name="application-name">
+    <!-- Favicon-->
+    <link href="assets/images/favicon.ico" rel="shortcut icon"/>
+    <link href="assets/images/favicon.ico" rel="icon" type="image/x-icon">
+    <link href="assets/images/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
+    <link href="assets/images/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
+    <link href="assets/images/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
+    <link href="assets/images/android-chrome-192x192.png" rel="android-chrome" sizes="192x192">
+    <!-- CSS Files -->
+    <link href="assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"/>
+    <link href="assets/plugins/simplebar/css/simplebar.css" rel="stylesheet"/>
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="assets/css/animate.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/icons.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/css/sidebar-menu.css" rel="stylesheet"/>
+    <link href="assets/css/app-style.css" rel="stylesheet"/>
+</head>
+
+<body class="bg-theme bg-theme5">
+
+<!-- start loader -->
+<div class="visible incoming" id="pageloader-overlay">
+    <div class="loader-wrapper-outer">
+        <div class="loader-wrapper-inner">
+            <div class="loader"></div>
+        </div>
+    </div>
+</div>
+<!-- end loader -->
+
+<!-- Start wrapper-->
+<div id="wrapper">
+
+    <div class="card-authentication2 mx-auto my-5">
+        <div class="card-group">
+            <div class="card mb-0">
+                <div class="bg-reset-password2"></div>
+                <div class="card-img-overlay rounded-left my-5">
+                    <h2 class="text-white">Ominet</h2>
+                    <h1 class="text-white">Reset</h1>
+                    <p class="card-text text-white pt-3">To reset your password please confirm your email address.</p>
+                    <p class="card-text text-white pt-3">The email with further instructions will be sent to the submitted email address.
+                        If you don’t receive a message in 5 minutes, check the junk folder. If you are still experiencing any problems, contact support at support@aerosimo.com</p>
+                </div>
+            </div>
+
+            <div class="card mb-0">
+                <div class="card-body">
+                    <div class="card-content p-3">
+                        <div class="text-center">
+                            <img alt="logo icon" src="assets/images/logo-icon.png">
+                        </div>
+                        <br>
+                        <div class="card-title text-uppercase text-center pb-3">Reset Password</div>
+                        <p class="text-center pb-2">Please enter your email address. You will receive a authentication code to create a
+                            new password via email.</p>
+                        <form method="post" action="forgot">
+                            <div class="form-group">
+                                <div class="position-relative has-icon-left">
+                                    <label for="InputEmailAddress" class="sr-only">Email Address</label>
+                                    <input type="text" id="InputEmailAddress" class="form-control"
+                                           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                           title="Characters followed by an @ sign, followed by more characters. Must be in the following order: characters@characters.domain"
+                                           placeholder="Email Address" name="email" autocomplete="off" required>
+                                    <div class="form-control-position">
+                                        <i class="icon-envelope-open"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-light btn-block mt-3" type="submit">Reset Password</button>
+                            <div class="clearfix"></div>
+                            <div class="text-center pt-3">
+                                <hr>
+                                <p class="text-warning">Return to the <a href="signin.html"> Sign In</a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--wrapper-->
+
+<!-- Bootstrap core JavaScript-->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/popper.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+
+<!-- sidebar-menu js -->
+<script src="assets/js/sidebar-menu.js"></script>
+
+<!-- Custom scripts -->
+<script src="assets/js/app-script.js"></script>
+
+</body>
+</html>

@@ -75,8 +75,8 @@ COMMENT ON TABLE audit_tbl IS 'This is used to store user session.';
 
 COMMENT ON COLUMN otp_tbl.uname IS 'This is the primary identifier';
 COMMENT ON COLUMN otp_tbl.authCode IS 'The unique transaction code';
-COMMENT ON COLUMN otp_tbl.status IS 'This the state of the otp, either pending or closed.';
-COMMENT ON COLUMN otp_tbl.lapse IS 'This the time the otp expires.';
+COMMENT ON COLUMN otp_tbl.status IS 'This the state of the OTP, either pending or closed.';
+COMMENT ON COLUMN otp_tbl.lapse IS 'This the time the OTP expires.';
 COMMENT ON TABLE otp_tbl IS 'This is used to generate validation or confirmation code for user session.';
 
 -- Setting Primary Key
@@ -231,11 +231,8 @@ AS
         i_uname IN auth_tbl.uname%TYPE,
         i_pword IN auth_tbl.pword%TYPE,
         i_inet IN audit_tbl.inet%TYPE,
-        i_authCode IN otp_tbl.authCode%TYPE,
         o_email OUT auth_tbl.email%TYPE,
         o_mfa OUT auth_tbl.mfa_enabled%TYPE,
-        o_authCode OUT otp_tbl.authCode%TYPE,
-        o_expire OUT otp_tbl.lapse%TYPE,
         o_faultcode OUT NUMBER,
         o_faultmsg OUT VARCHAR2);
 
@@ -499,7 +496,7 @@ AS
         END IF;
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
-            o_response := 'The otp token is not valid or expired';
+            o_response := 'The OTP token is not valid or expired';
         WHEN OTHERS THEN
             ROLLBACK;
             o_response := SUBSTR(SQLERRM, 1, 2000);
@@ -517,9 +514,9 @@ AS
     AS
         match_count NUMBER;
     BEGIN
-        SELECT COUNT(uname) INTO match_count FROM auth_tbl WHERE email = i_email;
+        SELECT (SELECT COUNT(uname) FROM auth_tbl WHERE email = i_email), uname
+        INTO match_count, o_uname FROM auth_tbl WHERE email = i_email;
         IF match_count = 1 THEN
-            SELECT uname INTO o_uname FROM auth_tbl WHERE email = i_email;
             setOTP(o_uname,i_authCode,o_authCode,o_expire);
             UPDATE auth_tbl SET status = 'Inactive' WHERE email = i_email;
             o_faultCode := 0;
