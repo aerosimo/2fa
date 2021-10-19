@@ -2,7 +2,7 @@
  * This piece of work is to enhance 2FA project functionality.                *
  *                                                                            *
  * Author:    Aerosimo                                                        *
- * File:      OTP.java                                                        *
+ * File:      otp.java                                                        *
  * Created:   05/10/2021, 18:19                                               *
  * Modified:  05/10/2021, 18:19                                               *
  *                                                                            *
@@ -40,7 +40,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet(name = "OTPServlet", description = "A simple OTP servlet to validate the user credentials", urlPatterns = "/OTP")
-public class OTP extends HttpServlet {
+public class otp extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
